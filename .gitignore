@@ -1,2 +1,4 @@
 # Godot 4+ specific ignores
 
+.godot/editor/script_editor_cache.cfg
+/.godot/editor

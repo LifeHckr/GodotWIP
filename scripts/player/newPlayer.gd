@@ -65,6 +65,7 @@ func _physics_process(_delta):
 		if nudgeObj != null && nudgeObj.has_method("nudge"):
 			nudging = true;
 			nudgeObj.nudge(self.position);
+			
 	#NUDGE -- GET OUT OF COLLs
 	if current_state == STATES.NUDGE:
 		velocity.y += gravity * _delta;
