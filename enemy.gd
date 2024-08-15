@@ -35,7 +35,7 @@ func nudge(nudgerPos):
 	#print_debug(nudgerPos.x - self.position.x);
 	apply_central_impulse(Vector2(sign(nudgerPos.x - self.position.x) * -60, 0));
 	if sign(nudgerPos.x - self.position.x) == 0:
-		apply_central_impulse(Vector2(40, 0));
+		apply_central_impulse(Vector2(30, 0));
 	
 func transition_state(next_state, data):
 	if next_state == STATES.KNOCKBACK:

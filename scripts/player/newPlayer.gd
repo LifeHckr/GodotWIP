@@ -1,13 +1,5 @@
 class_name Player extends CharacterBody2D
 
-
-const SPEED = 300.0
-const ROLL_SPEED = 400.0
-const JUMP_VELOCITY = -500.0
-var attack = 3;
-var knockback = 180;
-
-const gravity = 980
 @onready var sprite = self.get_node("sprite");
 @onready var anims = sprite.get_node("anims");
 @onready var camera = self.get_node("camera");
@@ -15,21 +7,32 @@ const gravity = 980
 @onready var hitbox = self.get_node("hitbox");
 @onready var particles = self.get_node("particles");
 @onready var ray = self.get_node("Ray");
+
+#region Declarations
+const gravity = 980
+var gravity_multi = 1;
+
 enum STATES {IDLE, RUNNING, JUMPING, FALLING, ROLLING, ATTACKING, AERIAL, KNOCKBACK, NUDGE};
 var initial_state = STATES.IDLE;
 var current_state = initial_state;
-#no direction var, do it based on scale???
-#left is dir -1, right dir 1
-#nvm it breaks shit
+
 var direction = -1;
 var x_direction = 0;
-var combo_anim = 0;
+
+var combo_anim = 1;
 var combo_until_finisher = 2; # has to be >0
+var SPEED = 300.0
+var ROLL_SPEED = 400.0
+var JUMP_VELOCITY = -500.0
+var attack = 3;
+var knockback = 180;
+
 var input_buffer = null;
 var aerial_action = true;
+
 var nudging = false;
 var nudgeObj;
-
+#endregion
 
 func _ready():
 	
@@ -47,17 +50,8 @@ func _process(_delta):
 	pass
 
 func _physics_process(_delta):
-	#universal pre update
-	
-#region Debug
-	print_debug(current_state);
-	if Input.is_action_just_pressed("debug1"):
-		self.set_collision_layer_value(5, true);
-		self.set_collision_mask_value(5, true);
-	if Input.is_action_just_pressed("debug2"):
-		self.set_collision_layer_value(5, false);
-		self.set_collision_mask_value(5, false);
-#endregion
+#universal pre update
+
 	x_direction = Input.get_axis("move_left", "move_right");
 
 	if ray.is_colliding():
@@ -65,6 +59,16 @@ func _physics_process(_delta):
 		if nudgeObj != null && nudgeObj.has_method("nudge"):
 			nudging = true;
 			nudgeObj.nudge(self.position);
+	
+#region Debug
+	print_debug(current_state);
+	if Input.is_action_just_pressed("debug1"):
+		anims.play("ground_attack_1");
+	if Input.is_action_just_pressed("debug2"):
+		self.set_collision_layer_value(5, false);
+		self.set_collision_mask_value(5, false);
+#endregion
+
 			
 	#NUDGE -- GET OUT OF COLLs
 	if current_state == STATES.NUDGE:
@@ -73,28 +77,25 @@ func _physics_process(_delta):
 		if Input.is_action_just_pressed("attack"):
 			transition_state(STATES.AERIAL);
 			aerial_action = false;
-			nudging = false;
 		elif Input.is_action_just_pressed("special"):
 			aerial_action = false;
 			transition_state(STATES.ROLLING);
-			nudging = false;
-		elif velocity.y == 0 && is_on_floor():
-			nudging = false;
+		elif velocity.y >= 0 && is_on_floor():
 			transition_state(STATES.FALLING);
 	#IDLE
 	elif current_state == STATES.IDLE:
 		velocity.y += gravity * _delta;
-		move_and_slide();
-		if Input.is_action_pressed("jump"):
-			transition_state(STATES.JUMPING);
+		if nudging || (velocity.y >= 0 && !is_on_floor()):
+			transition_state(STATES.FALLING);
 		elif Input.is_action_just_pressed("attack"):
 			transition_state(STATES.ATTACKING);
 		elif Input.is_action_just_pressed("special"):
 			transition_state(STATES.ROLLING);
-		elif nudging || (velocity.y >= 0 && !is_on_floor()):
-			transition_state(STATES.FALLING);
+		elif Input.is_action_pressed("jump"):
+			transition_state(STATES.JUMPING);
 		elif x_direction != 0:
 			transition_state(STATES.RUNNING);
+		move_and_slide();
 		pass
 		
 	#RUNNING
@@ -112,7 +113,7 @@ func _physics_process(_delta):
 			transition_state(STATES.ROLLING);
 		elif x_direction == 0:
 			transition_state(STATES.IDLE);
-		elif velocity.y >= 0 && !is_on_floor():
+		elif nudging || (velocity.y >= 0 && !is_on_floor()):
 			transition_state(STATES.FALLING);
 		move_and_slide();
 
@@ -135,7 +136,7 @@ func _physics_process(_delta):
 			#velocity.y *= .5;
 			transition_state(STATES.ROLLING);
 		elif is_on_floor():
-			transition_state(STATES.IDLE);
+			transition_state(STATES.FALLING);
 		elif velocity.y >= 0 && !is_on_floor():
 			transition_state(STATES.FALLING);
 		pass
@@ -154,11 +155,11 @@ func _physics_process(_delta):
 		elif Input.is_action_just_pressed("special") && aerial_action:
 			aerial_action = false;
 			transition_state(STATES.ROLLING);
-		#elif is_on_floor() && x_direction != 0:
-			#transition_state(STATES.RUNNING);
 		elif nudging:
 			transition_state(STATES.NUDGE);
-		elif is_on_floor() && velocity.y == 0:
+		elif is_on_floor() && x_direction != 0:
+			transition_state(STATES.RUNNING);
+		elif is_on_floor() && velocity.y >= 0:
 			transition_state(STATES.IDLE);
 		pass
 		
@@ -196,8 +197,8 @@ func _physics_process(_delta):
 			if Input.is_action_pressed("special"):
 				input_buffer = "special";
 		#print_debug(input_buffer);
-		if nudging:
-			transition_state(STATES.NUDGE);
+		#if nudging: #idk if this si still necessary
+			#transition_state(STATES.NUDGE);
 		if !sprite.is_playing(): # look into doing based on progress, could skip recovery frames
 			hitbox.monitoring = false;
 			if x_direction != 0 && x_direction != direction:
@@ -247,7 +248,7 @@ func _physics_process(_delta):
 			input_buffer = "special";
 		
 		if is_on_floor() && !nudging:
-			transition_state(STATES.IDLE);
+			transition_state(STATES.FALLING);
 		if !sprite.is_playing():
 			hitbox.monitoring = false;
 			if x_direction != 0 && x_direction != direction:
@@ -285,59 +286,81 @@ func _physics_process(_delta):
 	
 	pass
 	
-func transition_state(next_state):
+
+#region States
+func transition_state(next_state) -> bool:
 	if current_state == next_state:
-		return 0;
-	hitbox.monitoring = false;
-	self.set_collision_layer_value(5, true);
-	self.set_collision_mask_value(5, true);
-	input_buffer = null;
-	combo_anim = 1;
-	if next_state == STATES.NUDGE:
-		nudge(nudgeObj);
-	if next_state == STATES.JUMPING:
-		sprite.play("jump");
-		velocity.y = JUMP_VELOCITY;
-	elif next_state == STATES.RUNNING:
-		aerial_action = true;
-		sprite.play("running");
-	elif next_state == STATES.FALLING:
-		sprite.play("falling");
-	elif next_state == STATES.IDLE:
-		aerial_action = true;
-		sprite.play("idle");
-		velocity.x = 0;
-	elif next_state == STATES.ROLLING:
-		if velocity.y < -300:
-			velocity.y = -300;
-		sprite.play("rolling");
-		velocity.x = SPEED * direction;
-		self.set_collision_layer_value(5, false);
-		self.set_collision_mask_value(5, false);
-	elif next_state == STATES.ATTACKING:
-		knockback = 180;
-		hitbox.monitoring = true;
-		velocity.y *= .5;
-		velocity.x = velocity.x/2 + 150 * direction;
-		sprite.play("ground_attack_1");
-	elif next_state == STATES.AERIAL:
-		knockback = 180;
-		hitbox.monitoring = true;
-		velocity.y = -250;
-		velocity.x *= .5;
-		velocity.x += direction*200;
-		sprite.play("aerial_1");
+		return false;
+	end_state(current_state);
+	match next_state:
+		STATES.NUDGE:
+			nudge(nudgeObj);
+		STATES.JUMPING:
+			sprite.play("jump");
+			velocity.y = JUMP_VELOCITY;
+		STATES.RUNNING:
+			aerial_action = true;
+			sprite.play("running");
+		STATES.FALLING:
+			sprite.play("falling");
+		STATES.IDLE:
+			aerial_action = true;
+			sprite.play("idle");
+			velocity.x = 0;
+		STATES.ROLLING:
+			if velocity.y < -300:
+				velocity.y = -300;
+			sprite.play("rolling");
+			velocity.x = SPEED * direction;
+			self.set_collision_layer_value(5, false);
+			self.set_collision_mask_value(5, false);
+		STATES.ATTACKING:
+			knockback = 180;
+			hitbox.monitoring = true;
+			#velocity.y *= .5;
+			velocity.x = velocity.x/2 + 150 * direction;
+			sprite.play("ground_attack_1");
+		STATES.AERIAL:
+			knockback = 180;
+			hitbox.monitoring = true;
+			velocity.y = -250;
+			velocity.x *= .5;
+			velocity.x += direction*200;
+			sprite.play("aerial_1");
 	current_state = next_state;
+	return true;
+
+func end_state(next_state):
+	match next_state:
+		STATES.NUDGE:
+			nudging = false;
+		STATES.JUMPING:
+			pass
+		STATES.FALLING:
+			pass
+		STATES.ROLLING:
+			self.set_collision_layer_value(5, true);
+			self.set_collision_mask_value(5, true);
+		STATES.ATTACKING:
+			input_buffer = null;
+			combo_anim = 1;
+			hitbox.monitoring = false;
+			pass
+		STATES.AERIAL:	
+			input_buffer = null;
+			combo_anim = 1;
+			hitbox.monitoring = false;
+			pass
 	pass
+#endregion
 
+#region Helpers
 
-func _on_hitbox_body_entered(_obj):
-	#anims.play("particles_delay");
-	if _obj.has_method("hit"):
-		_obj.hit(attack, Vector2(sign(_obj.position.x - self.position.x) * knockback , -150));
-		pass
-	pass # Replace with function body.
-	
+#Can't directly change velo in anims, and relative position changes are wierd to implement and questionable physics wise
+func animVeloc(veloX, veloY):
+	velocity.x += direction * veloX;
+	velocity.y = veloY;
+
 func on_pickup(obj):
 	#print_debug(obj.name);
 	obj.queue_free();
@@ -348,7 +371,20 @@ func nudge(nudger):
 	velocity.y -= 2;
 	x_direction = 0;
 	move_and_slide();
+
+#endregion
+
+#region Signals
+
+func _on_hitbox_body_entered(_obj):
+	#anims.play("particles_delay");
+	if _obj.has_method("hit"):
+		_obj.hit(attack, Vector2(sign(_obj.position.x - self.position.x) * knockback , -150));
+		pass
+	pass
 	
 #func _on_test_pickup_collected(obj):
 	#obj.queue_free();
 	#pass # Replace with function body.
+
+#endregion
