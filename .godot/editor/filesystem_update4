@@ -1,6 +1,0 @@
-res://main.tscn
-res://enemy.gd
-res://scenes/test_pickup.tscn
-res://scenes/player.tscn
-res://scenes/enemy.tscn
-res://scripts/player/newPlayer.gd

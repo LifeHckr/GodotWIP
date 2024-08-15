@@ -197,8 +197,8 @@ func _physics_process(_delta):
 			if Input.is_action_pressed("special"):
 				input_buffer = "special";
 		#print_debug(input_buffer);
-		#if nudging: #idk if this si still necessary
-			#transition_state(STATES.NUDGE);
+		if nudging: #idk if this si still necessary for att state
+			transition_state(STATES.FALLING);
 		if !sprite.is_playing(): # look into doing based on progress, could skip recovery frames
 			hitbox.monitoring = false;
 			if x_direction != 0 && x_direction != direction:
