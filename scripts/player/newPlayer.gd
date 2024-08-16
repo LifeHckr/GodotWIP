@@ -26,6 +26,8 @@ var ROLL_SPEED = 400.0
 var JUMP_VELOCITY = -500.0
 var attack = 3;
 var knockback = 180;
+var hit_dmg_multi: float = 1.0;
+var hit_knockback_multi: float  = 1.0;
 
 var input_buffer = null;
 var aerial_action = true;
@@ -43,10 +45,10 @@ func _process(_delta):
 	#Camera offsets
 	if current_state == STATES.RUNNING && !is_on_wall():
 		var tween = get_tree().create_tween();
-		tween.tween_property(camera, "offset", Vector2(direction * 150, 0), 1);
+		tween.tween_property(camera, "offset", Vector2(direction * 150, -30), 1);
 	else:
 		var tween = get_tree().create_tween();
-		tween.tween_property(camera, "offset", Vector2(0, 0), 1);
+		tween.tween_property(camera, "offset", Vector2(0, -30), 1);
 	pass
 
 func _physics_process(_delta):

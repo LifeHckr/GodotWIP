@@ -285,7 +285,6 @@ script = ExtResource("1_j21uc")
 sprite_frames = SubResource("SpriteFrames_ccfmf")
 animation = &"idle"
 autoplay = "idle"
-frame = 1
 
 [node name="anims" type="AnimationPlayer" parent="."]
 libraries = {

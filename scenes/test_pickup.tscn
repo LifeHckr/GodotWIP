@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://chq66hu50282a" path="res://sprites/mask.png" id="2_30dyk"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_n2gac"]
-size = Vector2(52, 62)
+size = Vector2(16, 19)
 
 [node name="pick_area" type="Area2D"]
 collision_layer = 2
@@ -12,11 +12,10 @@ collision_mask = 2
 script = ExtResource("1_jnvoo")
 
 [node name="pick_coll" type="CollisionShape2D" parent="."]
-position = Vector2(-1, 0)
+position = Vector2(0, -0.5)
 shape = SubResource("RectangleShape2D_n2gac")
 
 [node name="testPickup" type="Sprite2D" parent="."]
-scale = Vector2(3, 3)
 texture = ExtResource("2_30dyk")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
