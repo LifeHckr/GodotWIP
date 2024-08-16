@@ -26,8 +26,10 @@ var ROLL_SPEED = 400.0
 var JUMP_VELOCITY = -500.0
 var attack = 3;
 var knockback = 180;
-var hit_dmg_multi: float = 1.0;
-var hit_knockback_multi: float  = 1.0;
+@export var hit_dmg_multi: float = 1.0;
+@export var hit_knockback_multi: float  = 1.0;
+@export var hit_knockback_multi_up: float  = 1.0;
+
 
 var input_buffer = null;
 var aerial_action = true;
@@ -222,23 +224,14 @@ func _physics_process(_delta):
 				transition_state(STATES.FALLING);
 			elif input_buffer == "attack" && combo_anim <= combo_until_finisher:
 				if combo_anim == combo_until_finisher:
-					#velocity.x += direction * 200;
 					combo_anim += 1;
-					knockback = 380;
 					anims.play("ground_attack_3");
-					#hitbox.monitoring = true;
 				elif combo_anim % 2 == 1:
-					#velocity.x += direction * 230;
 					combo_anim += 1;
-					knockback = 210;
 					anims.play("ground_attack_2");
-					#hitbox.monitoring = true;
 				elif combo_anim % 2 == 0:
-					#velocity.x += direction * 150;
 					combo_anim += 1;
-					knockback = 210;
 					anims.play("ground_attack_1");
-					#hitbox.monitoring = true;
 				input_buffer = null;
 			elif input_buffer == "jump":
 				transition_state(STATES.JUMPING);
@@ -263,33 +256,21 @@ func _physics_process(_delta):
 		
 		if is_on_floor() && !nudging:
 			transition_state(STATES.FALLING);
-		if !sprite.is_playing():
+		if !anims.is_playing():
 			hitbox.monitoring = false;
 			if x_direction != 0 && x_direction != direction:
 				self.scale.x *= -1;
 				direction = x_direction;
 			if input_buffer == "attack" && combo_anim <= combo_until_finisher:
 				if combo_anim == combo_until_finisher:
-					velocity.y = -225;
-					velocity.x += direction * 220;
-					knockback = 280;
 					combo_anim += 1;
-					sprite.play("aerial_3");
-					hitbox.monitoring = true;
+					anims.play("aerial_3");
 				elif combo_anim % 2 == 1:
-					velocity.y = -350;
-					velocity.x += direction * 160;
 					combo_anim += 1;
-					knockback = 180;
-					sprite.play("aerial_2");
-					hitbox.monitoring = true;
+					anims.play("aerial_2");
 				elif combo_anim % 2 == 0:
-					velocity.y = -250;
-					velocity.x += direction*240;
 					combo_anim += 1;
-					knockback = 180;
-					sprite.play("aerial_1");
-					hitbox.monitoring = true;
+					anims.play("aerial_1");
 				input_buffer = null;
 			elif input_buffer == "special":
 				transition_state(STATES.ROLLING);
@@ -312,6 +293,7 @@ func transition_state(next_state) -> bool:
 		STATES.JUMPING:
 			nudging = false;
 			ray.enabled = false;
+			aerial_action = true;
 			sprite.play("jump");
 			velocity.y = JUMP_VELOCITY;
 		STATES.RUNNING:
@@ -336,16 +318,16 @@ func transition_state(next_state) -> bool:
 			aerial_action = true;
 			knockback = 180;
 			#hitbox.monitoring = true;
-			#velocity.y *= .5;
+			velocity.y *= .5;
 			velocity.x = velocity.x/2;
 			anims.play("ground_attack_1");
 		STATES.AERIAL:
 			knockback = 180;
 			hitbox.monitoring = true;
-			velocity.y = -250;
+			#velocity.y = -250;
 			velocity.x *= .5;
-			velocity.x += direction*200;
-			sprite.play("aerial_1");
+			#velocity.x += direction*200;
+			anims.play("aerial_1");
 	current_state = next_state;
 	return true;
 
@@ -401,7 +383,7 @@ func nudge(nudger):
 func _on_hitbox_body_entered(_obj):
 	#anims.play("particles_delay");
 	if _obj.has_method("hit"):
-		_obj.hit(attack, Vector2(sign(_obj.position.x - self.position.x) * knockback , -150));
+		_obj.hit(attack, Vector2(sign(_obj.position.x - self.position.x) * 100 * hit_knockback_multi , -150 * hit_knockback_multi_up));
 		pass
 	pass
 	

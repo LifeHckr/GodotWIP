@@ -271,7 +271,7 @@ position = Vector2(-86, 504)
 
 [node name="enemy" parent="." instance=ExtResource("5_8vlu1")]
 z_index = 1
-position = Vector2(-44, 524)
+position = Vector2(208, 345)
 
 [node name="Platform Layer" type="TileMapLayer" parent="."]
 position = Vector2(-32, 279)
