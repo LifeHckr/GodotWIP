@@ -1,5 +1,5 @@
 extends Node
-@onready var player = get_tree().get_nodes_in_group("players")
+@onready var player = get_tree().get_nodes_in_group("players");
 #Texture load
 const spriteRun = preload("res://assets/pizza-face.png");
 const spriteWalk = preload("res://assets/pizza.png");
