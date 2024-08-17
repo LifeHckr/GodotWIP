@@ -28,6 +28,12 @@ window/size/window_width_override=1280
 window/size/window_height_override=720
 window/stretch/mode="viewport"
 
+[global_group]
+
+UI_Layers=""
+enemy=""
+players=""
+
 [input]
 
 move_up={
@@ -93,7 +99,9 @@ special={
 2d_physics/layer_1="Walls"
 2d_physics/layer_2="Player Attacks"
 2d_physics/layer_3="Enemy Attacks"
+2d_physics/layer_4="Pickups"
 2d_physics/layer_5="Enemies"
+2d_physics/layer_6="Death Plane"
 
 [rendering]
 

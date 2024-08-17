@@ -1,8 +1,9 @@
-[gd_scene load_steps=80 format=3 uid="uid://ctcvqgc0oecb6"]
+[gd_scene load_steps=85 format=3 uid="uid://ctcvqgc0oecb6"]
 
 [ext_resource type="Script" path="res://scripts/player/newPlayer.gd" id="1_km3ob"]
 [ext_resource type="Texture2D" uid="uid://dnj36n761ml46" path="res://testArt/1029edit.png" id="2_dah4d"]
 [ext_resource type="Texture2D" uid="uid://co1tfxr2aq5c7" path="res://icon.svg" id="3_3t5yh"]
+[ext_resource type="Texture2D" uid="uid://b2qhs4lhni6pn" path="res://testArt/new/Adventurer-1.5/adventurer-v1.5-Sheet.png" id="3_s4isx"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6y31r"]
 atlas = ExtResource("2_dah4d")
@@ -256,6 +257,22 @@ region = Rect2(336, 64, 48, 64)
 atlas = ExtResource("2_dah4d")
 region = Rect2(48, 128, 48, 64)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_h5arp"]
+atlas = ExtResource("3_s4isx")
+region = Rect2(0, 0, 50, 37)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bolt8"]
+atlas = ExtResource("3_s4isx")
+region = Rect2(50, 0, 50, 37)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n3bnh"]
+atlas = ExtResource("3_s4isx")
+region = Rect2(100, 0, 50, 37)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jsu1y"]
+atlas = ExtResource("3_s4isx")
+region = Rect2(150, 0, 50, 37)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_2rbvy"]
 animations = [{
 "frames": [{
@@ -445,7 +462,7 @@ animations = [{
 "duration": 8.0,
 "texture": SubResource("AtlasTexture_cdbq7")
 }, {
-"duration": 12.0,
+"duration": 16.0,
 "texture": SubResource("AtlasTexture_gssra")
 }, {
 "duration": 8.0,
@@ -517,6 +534,26 @@ animations = [{
 "loop": false,
 "name": &"stopping",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 20.0,
+"texture": SubResource("AtlasTexture_h5arp")
+}, {
+"duration": 10.0,
+"texture": SubResource("AtlasTexture_bolt8")
+}, {
+"duration": 20.0,
+"texture": SubResource("AtlasTexture_n3bnh")
+}, {
+"duration": 10.0,
+"texture": SubResource("AtlasTexture_jsu1y")
+}, {
+"duration": 20.0,
+"texture": SubResource("AtlasTexture_h5arp")
+}],
+"loop": true,
+"name": &"test",
+"speed": 60.0
 }]
 
 [sub_resource type="Animation" id="Animation_ydvf6"]
@@ -1241,8 +1278,9 @@ height = 36.0
 radius = 9.0
 
 [node name="player" type="CharacterBody2D" groups=["players"]]
-collision_layer = 20
-collision_mask = 21
+collision_layer = 28
+collision_mask = 29
+collision_priority = 4.0
 floor_block_on_wall = false
 platform_floor_layers = 4294967041
 platform_wall_layers = 1
@@ -1259,7 +1297,7 @@ hit_from_inside = true
 [node name="sprite" type="AnimatedSprite2D" parent="."]
 z_index = 1
 sprite_frames = SubResource("SpriteFrames_2rbvy")
-animation = &"ground_attack_3"
+animation = &"idle"
 autoplay = "idle"
 metadata/anims = NodePath("anims")
 

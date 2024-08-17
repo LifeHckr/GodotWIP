@@ -9,10 +9,13 @@ class_name Player extends CharacterBody2D
 @onready var ray = self.get_node("Ray");
 
 #region Declarations
+enum STATES {IDLE, RUNNING, JUMPING, FALLING, ROLLING, ATTACKING, AERIAL, KNOCKBACK, NUDGE};
+const base_hp = 100.0;
+const base_poise = 7;
 const gravity = 980
 var gravity_multi = 1;
 
-enum STATES {IDLE, RUNNING, JUMPING, FALLING, ROLLING, ATTACKING, AERIAL, KNOCKBACK, NUDGE};
+
 var initial_state = STATES.IDLE;
 var current_state = initial_state;
 var aer_combos = ["aerial_1", "aerial_2", "aerial_3"];
@@ -21,12 +24,18 @@ var att_combos = ["ground_attack_1", "ground_attack_2", "ground_attack_3"];
 var direction = -1;
 var x_direction = 0;
 
+signal change_portrait;
+
 var combo_anim = 1;
 var combo_length = 3; # has to be >0
 var SPEED = 300.0
 var ROLL_SPEED = 400.0
-var JUMP_VELOCITY = -500.0
-var attack = 3;
+var JUMP_VELOCITY = -500.0;
+var hp : float;
+var poise;
+var invince = false;
+var invince_time = .6;
+var attack = 1;
 var knockback = 100;
 @export var hit_dmg_multi: float = 1.0;
 @export var hit_knockback_multi: float  = 1.0;
@@ -40,11 +49,11 @@ var nudging = false;
 var nudgeObj;
 #endregion
 
-func _ready():
-	
-	pass;
+func _ready() -> void:
+	hp = base_hp;
+	poise = base_poise;
 
-func _process(_delta):
+func _process(_delta) -> void:
 	
 	#Camera offsets
 	if current_state == STATES.RUNNING && !is_on_wall():
@@ -55,7 +64,7 @@ func _process(_delta):
 		tween.tween_property(camera, "offset", Vector2(0, -30), 1);
 	pass
 
-func _physics_process(_delta):
+func _physics_process(_delta) -> void:
 #universal pre update
 
 	x_direction = Input.get_axis("move_left", "move_right");
@@ -164,6 +173,7 @@ func _physics_process(_delta):
 						
 	#ROLLING --------------Dodge roll------------------------
 		STATES.ROLLING:
+			invince = true;
 			velocity.y += gravity * _delta;
 			velocity.x = move_toward(velocity.x, direction * ROLL_SPEED, 40);
 			move_and_slide();
@@ -239,7 +249,21 @@ func _physics_process(_delta):
 				elif input_buffer == "special":
 					transition_state(STATES.ROLLING);
 				else:
-					transition_state(STATES.FALLING);	
+					transition_state(STATES.FALLING);
+	
+	#KNOCKBACK ----------------------------------------------------------------
+		STATES.KNOCKBACK:
+			invince = true;
+			velocity.y += gravity * _delta;
+			velocity.x = move_toward(velocity.x, 0, 12);
+			move_and_slide();
+			
+			if !sprite.is_playing():
+				if is_on_floor():
+					transition_state(STATES.IDLE);
+				else: 
+					transition_state(STATES.FALLING);
+
 #END PHYSICS PROCESS ----------------------------------------------------------------	
 
 
@@ -249,88 +273,100 @@ func transition_state(next_state) -> bool:
 	
 	if current_state == next_state:
 		return false;
-		
+
 	end_state(current_state);
-	
+
 	match next_state:
 		STATES.NUDGE:
 			nudge(nudgeObj);
-			
+
 		STATES.JUMPING:
 			nudging = false;
 			ray.enabled = false;
 			aerial_action = true;
 			sprite.play("jump");
 			velocity.y = JUMP_VELOCITY;
-			
+
 		STATES.RUNNING:
 			aerial_action = true;
 			sprite.play("running");
-			
+
 		STATES.FALLING:
 			sprite.play("falling");
-			
+
 		STATES.IDLE:
 			aerial_action = true;
 			sprite.play("idle");
 			velocity.x = 0;
-			
+
 		STATES.ROLLING:
 			nudging = false;
 			ray.enabled = false;
-			
+
 			#Reduce upward momentum from rolling immediately after jumping
 			if velocity.y < -300:
 				velocity.y = -300;
-				
 			self.set_collision_layer_value(5, false);
 			self.set_collision_mask_value(5, false);
+
 			sprite.play("rolling");
 			velocity.x = SPEED * direction;
-			
+
 		STATES.ATTACKING:
 			aerial_action = true;
 			velocity.y *= .5;
 			velocity.x = velocity.x/2;
 			doAttack(att_combos);
-			
+
 		STATES.AERIAL:
 			velocity.x *= .5;
 			doAttack(aer_combos);
-			
+
+		STATES.KNOCKBACK:
+			nudging = false;
+			ray.enabled = false;
+			sprite.play("knockback");
+			pass
+
 	current_state = next_state;
 	return true;
 
-func end_state(next_state):
+func end_state(next_state) -> void:
 	match next_state:
 		STATES.NUDGE:
 			nudging = false;
-			
+
 		STATES.JUMPING:
 			ray.enabled = true;
 			pass
-			
+
 		STATES.FALLING:
 			pass
-			
+
 		STATES.ROLLING:
 			ray.enabled = true;
 			self.set_collision_layer_value(5, true);
 			self.set_collision_mask_value(5, true);
-		
+			invince = false;
+
+
 		STATES.ATTACKING:
 			anims.stop();
 			input_buffer = null;
 			combo_anim = 1;
 			hitbox.monitoring = false;
-			pass
-		
+
 		STATES.AERIAL:	
 			anims.stop();
 			input_buffer = null;
 			combo_anim = 1;
 			hitbox.monitoring = false;
 			nudging = false;
+
+		STATES.KNOCKBACK:
+			aerial_action = true;
+			ray.enabled = true;
+			invince = false;
 			pass
 	pass
 #endregion
@@ -338,26 +374,39 @@ func end_state(next_state):
 #region Helpers
 
 #Can't directly change velo in anims, and relative position changes are wierd to implement and questionable physics wise
-func animVeloc(veloX, veloY):
+func animVeloc(veloX: int, veloY: int) -> void:
 	velocity.x += direction * veloX;
 	velocity.y = veloY;
 
-func on_pickup(obj):
+func on_pickup(obj : Node) -> void:
 	obj.queue_free();
 	pass
 
-func nudge(nudger):
+func nudge(nudger: Node) -> void:
 	velocity.x = sign(nudger.position.x - self.position.x) * -100;
 	velocity.y -= 2;
 	x_direction = 0;
 	move_and_slide();
 	
-func checkTurn():
+func hit(damage : int, dmg_knockback : Vector2) -> void:
+	if !invince:
+		hp -= damage;
+		self.emit_signal("change_portrait", "hurt");
+		poise -= damage;
+		invince = true;
+		if poise <= 0:
+			velocity = dmg_knockback;
+			transition_state(STATES.KNOCKBACK);
+			poise = base_poise;
+		else:
+			Global.delayed_call(self, "hittable", invince_time);
+
+func checkTurn() -> void:
 	if x_direction != 0 && x_direction != direction:
 		self.scale.x *= -1;
 		direction = x_direction;
 		
-func doAttack(combo_anim_names):
+func doAttack(combo_anim_names : Array) -> void:
 	if combo_anim == combo_length:
 		anims.play(combo_anim_names[2]);
 	elif combo_anim % 2 == 0:
@@ -365,21 +414,18 @@ func doAttack(combo_anim_names):
 	elif combo_anim % 2 == 1:
 		anims.play(combo_anim_names[0]);
 	combo_anim += 1;
-	pass
 
 #endregion
 
 #region Signals
 
-func _on_hitbox_body_entered(_obj):
+func hittable() -> void:
+	invince = false;
+
+func _on_hitbox_body_entered(_obj : Node2D) -> void:
 	if _obj.has_method("hit"):
 		var dmg = ceil(attack * hit_dmg_multi);
 		_obj.hit(dmg, Vector2(sign(_obj.position.x - self.position.x) * 100 * hit_knockback_multi , -150 * hit_knockback_multi_up));
-		pass
-	pass
-
-#func _on_test_pickup_collected(obj):
-	#obj.queue_free();
-	#pass # Replace with function body.
+		self.change_portrait.emit("yah");
 
 #endregion
