@@ -18,8 +18,8 @@ var gravity_multi = 1;
 
 var initial_state = STATES.IDLE;
 var current_state = initial_state;
-var aer_combos = ["aerial_1", "aerial_2", "aerial_3"];
-var att_combos = ["ground_attack_1", "ground_attack_2", "ground_attack_3"];
+var aer_combos = ["new_aerial_1", "new_aerial_2", "new_aerial_3"];
+var att_combos = ["new_ground_attack_1", "new_ground_attack_2", "new_ground_attack_3"];
 
 var direction = -1;
 var x_direction = 0;
@@ -30,7 +30,7 @@ var combo_anim = 1;
 var combo_length = 3; # has to be >0
 var SPEED = 300.0
 var ROLL_SPEED = 400.0
-var JUMP_VELOCITY = -500.0;
+var JUMP_VELOCITY = -450.0;
 var hp : float;
 var poise;
 var invince = false;
@@ -313,12 +313,14 @@ func transition_state(next_state) -> bool:
 			velocity.x = SPEED * direction;
 
 		STATES.ATTACKING:
+			sprite.pause();
 			aerial_action = true;
 			velocity.y *= .5;
 			velocity.x = velocity.x/2;
 			doAttack(att_combos);
 
 		STATES.AERIAL:
+			sprite.pause();
 			velocity.x *= .5;
 			doAttack(aer_combos);
 
@@ -338,7 +340,6 @@ func end_state(next_state) -> void:
 
 		STATES.JUMPING:
 			ray.enabled = true;
-			pass
 
 		STATES.FALLING:
 			pass

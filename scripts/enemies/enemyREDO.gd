@@ -72,6 +72,7 @@ func _physics_process(_delta) -> void:
 				transition_state(STATES.ATTACKING, null);
 				
 		STATES.ATTACKING:
+			sprite.pause();
 			if !anims.is_playing():
 				transition_state(STATES.IDLE, null);
 				
@@ -155,8 +156,8 @@ func nudge(nudgerPos : Vector2) -> void:
 	velocity = Vector2(sign(nudgerPos.x - self.position.x) * -60, 0);
 	if sign(nudgerPos.x - self.position.x) == 0:
 		velocity = Vector2(30, 0);
-		
-		
+	move_and_slide();
+
 func _on_hitbox_body_entered(obj: Node2D) -> void:
 	if obj.has_method("hit"):
 		var dmg = ceil(attack);

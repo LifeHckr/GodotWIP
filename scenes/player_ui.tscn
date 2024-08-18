@@ -176,8 +176,10 @@ animations = [{
 z_index = 1
 position = Vector2(580, 300)
 sprite_frames = SubResource("SpriteFrames_c27oe")
-animation = &"default_blink"
+animation = &"yah"
 autoplay = "default_blink"
+frame = 4
+frame_progress = 1.0
 
 [node name="hp_back_back" parent="." instance=ExtResource("2_jg87i")]
 offset_left = 583.0
