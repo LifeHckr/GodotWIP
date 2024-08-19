@@ -1,0 +1,32 @@
+[gd_scene load_steps=3 format=3 uid="uid://cfh75ib7tnmbw"]
+
+[ext_resource type="Texture2D" uid="uid://co1tfxr2aq5c7" path="res://icon.svg" id="1_nbyff"]
+[ext_resource type="Script" path="res://scenes/hit_particles.gd" id="2_iv0kb"]
+
+[node name="particles" type="CPUParticles2D"]
+modulate = Color(1, 1, 1, 0.631373)
+z_index = 10
+position = Vector2(4, 15)
+emitting = false
+amount = 7
+lifetime = 0.62
+one_shot = true
+preprocess = 0.2
+explosiveness = 1.0
+fixed_fps = 30
+draw_order = 1
+texture = ExtResource("1_nbyff")
+emission_shape = 1
+emission_sphere_radius = 2.0
+direction = Vector2(0, -4)
+spread = 40.0
+gravity = Vector2(0, 98)
+initial_velocity_min = 50.0
+initial_velocity_max = 70.0
+angular_velocity_min = -30.0
+angular_velocity_max = 30.0
+scale_amount_min = 0.05
+scale_amount_max = 0.07
+script = ExtResource("2_iv0kb")
+
+[connection signal="finished" from="." to="." method="_on_finished"]

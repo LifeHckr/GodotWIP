@@ -5,7 +5,7 @@ class_name Player extends CharacterBody2D
 @onready var camera = self.get_node("camera");
 @onready var body = self.get_node("body");
 @onready var hitbox = self.get_node("hitbox");
-@onready var particles = self.get_node("particles");
+#@onready var particles = self.get_node("particles");
 @onready var ray = self.get_node("Ray");
 
 #region Declarations
@@ -30,7 +30,7 @@ var combo_anim = 1;
 var combo_length = 3; # has to be >0
 var SPEED = 300.0
 var ROLL_SPEED = 400.0
-var JUMP_VELOCITY = -450.0;
+var JUMP_VELOCITY = -425.0;
 var hp : float;
 var poise;
 var invince = false;

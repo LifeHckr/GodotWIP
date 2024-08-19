@@ -4,9 +4,10 @@ class_name EnemyChar extends CharacterBody2D
 @onready var anims = sprite.get_node("anims");
 @onready var body = self.get_node("body");
 @onready var hitbox = self.get_node("hitbox");
-@onready var particles = self.get_node("particles");
 @onready var hp_bar = self.get_node("./hp_back_back/hp_back/hp_bar");
 @onready var ground_check = self.get_node("ground_checker");
+
+@onready var PARTICLES = preload("res://scenes/hit_particles.tscn");
 
 var hp_bar_length;
 
@@ -24,7 +25,7 @@ var current_state = STATES.IDLE
 var current_target;
 
 var vision_range : float = 250.0;
-var direction : float = 1.0;
+var direction : float = -1.0;
 
 var gravity = 980
 var friction = 12;
@@ -116,9 +117,12 @@ func transition_state(next_state, data) -> bool:
 	return true;
 
 func hit(damage : int, knockback : Vector2) -> void:
-	#this technically interrupts the attack anim, because anims finishes playing for a sec
-	#But its kinda good
-	anims.play("particles_delay"); 
+	var particles = PARTICLES.instantiate();
+	add_child(particles);
+	particles.emitting = true;
+	anims.play("interrupt");
+	
+	
 	hp -= damage;
 	updateHP();
 	if hp <= 0:

@@ -1,8 +1,7 @@
-[gd_scene load_steps=65 format=3 uid="uid://ds423wa3r5uax"]
+[gd_scene load_steps=64 format=3 uid="uid://ds423wa3r5uax"]
 
 [ext_resource type="Script" path="res://scripts/enemies/enemyREDO.gd" id="1_utblw"]
 [ext_resource type="Texture2D" uid="uid://d3u6y8ar33kot" path="res://testArt/ene1.png" id="2_5ogu7"]
-[ext_resource type="Texture2D" uid="uid://co1tfxr2aq5c7" path="res://icon.svg" id="3_bektx"]
 [ext_resource type="Texture2D" uid="uid://dfw1xf1mpne4m" path="res://testArt/new/Slime/Individual Sprites/slime-attack-0.png" id="3_u66km"]
 [ext_resource type="PackedScene" uid="uid://cyywra1fues8v" path="res://scenes/hp_back_back.tscn" id="4_6fdp5"]
 [ext_resource type="Texture2D" uid="uid://c04ntmc4nadd6" path="res://testArt/new/Slime/Individual Sprites/slime-attack-1.png" id="4_r3ok6"]
@@ -387,6 +386,18 @@ tracks/2/keys = {
 "update": 0,
 "values": [Color(1, 1, 1, 1)]
 }
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("..:up_direction")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, -1)]
+}
 
 [sub_resource type="Animation" id="Animation_02guc"]
 resource_name = "attack_2"
@@ -435,7 +446,7 @@ tracks/3/path = NodePath("..")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0.216667, 0.416667),
+"times": PackedFloat32Array(0.25, 0.416667),
 "transitions": PackedFloat32Array(1, 1),
 "values": [{
 "args": [],
@@ -487,21 +498,21 @@ tracks/2/keys = {
 "values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
 }
 
-[sub_resource type="Animation" id="Animation_nlmlu"]
-resource_name = "particles_delay"
-length = 0.200005
-step = 0.05
+[sub_resource type="Animation" id="Animation_dwm2c"]
+resource_name = "interrupt"
+length = 0.0833352
+step = 0.0166667
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("../particles:emitting")
+tracks/0/path = NodePath("..:up_direction")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 1,
-"values": [false, true, false]
+"times": PackedFloat32Array(0, 0.0833333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, -1), Vector2(0, -1)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_6hg5d"]
@@ -509,7 +520,7 @@ _data = {
 "RESET": SubResource("Animation_4qj6x"),
 "attack_2": SubResource("Animation_02guc"),
 "death": SubResource("Animation_qblkf"),
-"particles_delay": SubResource("Animation_nlmlu")
+"interrupt": SubResource("Animation_dwm2c")
 }
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_nxdy8"]
@@ -549,30 +560,6 @@ monitoring = false
 [node name="boxShape" type="CollisionShape2D" parent="hitbox"]
 position = Vector2(-22, 10)
 shape = SubResource("CapsuleShape2D_nl32o")
-
-[node name="particles" type="CPUParticles2D" parent="."]
-modulate = Color(1, 1, 1, 0.631373)
-z_index = 10
-position = Vector2(4, 15)
-emitting = false
-amount = 7
-lifetime = 0.62
-preprocess = 0.2
-explosiveness = 0.9
-fixed_fps = 30
-draw_order = 1
-texture = ExtResource("3_bektx")
-emission_shape = 1
-emission_sphere_radius = 2.0
-direction = Vector2(0, -4)
-spread = 40.0
-gravity = Vector2(0, 98)
-initial_velocity_min = 50.0
-initial_velocity_max = 70.0
-angular_velocity_min = -30.0
-angular_velocity_max = 30.0
-scale_amount_min = 0.05
-scale_amount_max = 0.07
 
 [node name="hp_back_back" parent="." instance=ExtResource("4_6fdp5")]
 
