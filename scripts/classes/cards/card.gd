@@ -1,7 +1,8 @@
-class_name Card extends RefCounted
+class_name Card extends Resource
 var value : int;
-var sprite = preload("res://testArt/cardEmpty.png");
-var exhaust = false;
+var sprite = preload("res://testArt/using/cardEmpty.png");
+var exhaust : bool = false;
+var can_combo : bool = true;
 signal used;
 
 func _init(v : int = 0):

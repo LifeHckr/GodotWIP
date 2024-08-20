@@ -1,12 +1,12 @@
 [gd_scene load_steps=16 format=4 uid="uid://dhhomhd7wggpg"]
 
 [ext_resource type="PackedScene" uid="uid://ctcvqgc0oecb6" path="res://scenes/player.tscn" id="1_ddtma"]
-[ext_resource type="TileSet" uid="uid://cfw01qk4b5so6" path="res://assets/tileset.tres" id="4_61iog"]
-[ext_resource type="Texture2D" uid="uid://ma55s6lwk50q" path="res://testArt/new/stringstar fields/background_0.png" id="4_327uw"]
+[ext_resource type="TileSet" uid="uid://cfw01qk4b5so6" path="res://testArt/tileset.tres" id="4_61iog"]
+[ext_resource type="Texture2D" uid="uid://ma55s6lwk50q" path="res://testArt/using/stringstar fields/background_0.png" id="4_327uw"]
 [ext_resource type="PackedScene" uid="uid://bcsqri2c3e5u3" path="res://scenes/test_pickup.tscn" id="4_hpnsa"]
-[ext_resource type="Texture2D" uid="uid://dn1qsabau0g85" path="res://testArt/new/stringstar fields/background_1.png" id="5_fdn6b"]
+[ext_resource type="Texture2D" uid="uid://dn1qsabau0g85" path="res://testArt/using/stringstar fields/background_1.png" id="5_fdn6b"]
 [ext_resource type="Texture2D" uid="uid://co1tfxr2aq5c7" path="res://icon.svg" id="6_nulrp"]
-[ext_resource type="Texture2D" uid="uid://0k60qhhrhhi5" path="res://testArt/new/stringstar fields/background_2.png" id="6_sgc6k"]
+[ext_resource type="Texture2D" uid="uid://0k60qhhrhhi5" path="res://testArt/using/stringstar fields/background_2.png" id="6_sgc6k"]
 [ext_resource type="PackedScene" uid="uid://ds423wa3r5uax" path="res://scenes/enemyREDO.tscn" id="6_xrl33"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gpa24"]
@@ -40,7 +40,7 @@ tile_set = ExtResource("4_61iog")
 
 [node name="player" parent="." instance=ExtResource("1_ddtma")]
 unique_name_in_owner = true
-position = Vector2(-104, 521)
+position = Vector2(-104, 525)
 scale = Vector2(1.5, 1.5)
 
 [node name="pick_area" parent="." instance=ExtResource("4_hpnsa")]
@@ -84,7 +84,7 @@ scale = Vector2(3, 3)
 texture = ExtResource("6_sgc6k")
 
 [node name="enemy2" parent="." instance=ExtResource("6_xrl33")]
-position = Vector2(228, 538)
+position = Vector2(970, 540)
 
 [node name="Walls" type="StaticBody2D" parent="."]
 z_index = -1

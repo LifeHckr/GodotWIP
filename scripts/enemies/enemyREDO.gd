@@ -4,7 +4,7 @@ class_name EnemyChar extends CharacterBody2D
 @onready var anims = sprite.get_node("anims");
 @onready var body = self.get_node("body");
 @onready var hitbox = self.get_node("hitbox");
-@onready var hp_bar = self.get_node("./hp_back_back/hp_back/hp_bar");
+@onready var hp_bar = self.get_node("./hp_back_back/hp_back/%hp_bar");
 @onready var ground_check = self.get_node("ground_checker");
 
 @onready var PARTICLES = preload("res://scenes/hit_particles.tscn");

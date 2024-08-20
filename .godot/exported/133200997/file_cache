@@ -1,8 +1,11 @@
-res://scenes/player.tscn::b78340f1acaa96d966db29a4de50fe9e::1723953126::res://.godot/exported/133200997/export-234fb6894ec6226e856ab7f825500d3d-player.scn
-res://scenes/test_pickup.tscn::dd653f46c54d1234810c3ad421c81fc3::1723953126::res://.godot/exported/133200997/export-23d91f5a4bc7a3a4b036a2f6e2c06d3e-test_pickup.scn
-res://main.tscn::e4e0d49debccb24e449b7d48595f7d1c::1723953126::res://.godot/exported/133200997/export-3070c538c03ee49b7677ff960a3f5195-main.scn
-res://assets/tileset.tres::b71aec750d771cd9c42429658cc4caa8::1723948387::res://.godot/exported/133200997/export-0e301b7c8063cc11469422033bd1425e-tileset.res
+res://scenes/player.tscn::012d1521e89f84662c46dae38c385fb6::1724126197::res://.godot/exported/133200997/export-234fb6894ec6226e856ab7f825500d3d-player.scn
+res://scenes/test_pickup.tscn::dd653f46c54d1234810c3ad421c81fc3::1724024717::res://.godot/exported/133200997/export-23d91f5a4bc7a3a4b036a2f6e2c06d3e-test_pickup.scn
+res://main.tscn::24ff204af98ec1b74693846d98c2451e::1724126161::res://.godot/exported/133200997/export-3070c538c03ee49b7677ff960a3f5195-main.scn
+res://assets/tileset.tres::b71aec750d771cd9c42429658cc4caa8::1724126065::res://.godot/exported/133200997/export-0e301b7c8063cc11469422033bd1425e-tileset.res
 res://scenes/enemy.tscn::f67d2fa662adaf8cbc4fbfb774a3555c::1723923646::res://.godot/exported/133200997/export-a930820ec0ab16db6719aff4daa500f9-enemy.scn
-res://scenes/enemyREDO.tscn::da85c1cdf50bf6b240f68c05d80c5ebb::1723953126::res://.godot/exported/133200997/export-515114795a5802150671a3e0f191130c-enemyREDO.scn
+res://scenes/enemyREDO.tscn::4de5b06e6baf407044074a65739b189a::1724126161::res://.godot/exported/133200997/export-515114795a5802150671a3e0f191130c-enemyREDO.scn
 res://scenes/hp_back_back.tscn::d4df11a633182c961780c6615d32fac6::1723927452::res://.godot/exported/133200997/export-242ef3a99b7107f0b5e7285c6559705f-hp_back_back.scn
-res://scenes/player_ui.tscn::5411630c58d8a2bf40d49ed24390873b::1723953127::res://.godot/exported/133200997/export-732cf57afb09a7e053f3c339d5f515a4-player_ui.scn
+res://scenes/player_ui.tscn::1c8bcc0896546821f6e1f11bbf69ee2a::1724126161::res://.godot/exported/133200997/export-732cf57afb09a7e053f3c339d5f515a4-player_ui.scn
+res://scenes/deck.tscn::27893bd08e184d4355f965bed6bd2f5a::1724093003::res://.godot/exported/133200997/export-5b3d4e1cac2d76a83278821172d47e7d-deck.scn
+res://scenes/hit_particles.tscn::7f8da537b1e420911432c1cb6ba57412::1724025237::res://.godot/exported/133200997/export-0d07194ce341e6bbeb285b4a7dbb6f75-hit_particles.scn
+res://scenes/projectile.tscn::b942547680392bfb50e17e5363a842f3::1724126161::res://.godot/exported/133200997/export-a882d3c243bffac1c7822c1c45b18505-projectile.scn

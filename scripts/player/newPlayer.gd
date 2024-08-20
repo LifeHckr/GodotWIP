@@ -1,12 +1,13 @@
 class_name Player extends CharacterBody2D
 
-@onready var sprite = self.get_node("sprite");
-@onready var anims = sprite.get_node("anims");
-@onready var camera = self.get_node("camera");
-@onready var body = self.get_node("body");
-@onready var hitbox = self.get_node("hitbox");
-@onready var ray = self.get_node("Ray");
-@onready var Player_UI = self.get_node("Player_UI");
+@onready var sprite : AnimatedSprite2D = self.get_node("sprite");
+@onready var anims : AnimationPlayer = sprite.get_node("anims");
+@onready var camera : Camera2D = self.get_node("camera");
+@onready var body : CollisionShape2D = self.get_node("body");
+@onready var hitbox : Area2D = self.get_node("hitbox");
+@onready var ray : RayCast2D = self.get_node("Ray");
+@onready var Player_UI : CanvasLayer = self.get_node("Player_UI");
+#@onready var states : StateMachine = self.get_node("PlayerStateMachine");
 
 
 #region Declarations
@@ -16,12 +17,11 @@ const base_poise = 7;
 const gravity = 980
 var gravity_multi = 1;
 
-
 var initial_state = STATES.IDLE;
 var current_state = initial_state;
-var aer_combos = ["new_aerial_1", "new_aerial_2", "new_aerial_3"];
-var att_combos = ["new_ground_attack_1", "new_ground_attack_2", "new_ground_attack_3"];
-var magic_combos = ["cast", "cast", "cast"]
+var aer_combos : Array[String] = ["new_aerial_1", "new_aerial_2", "new_aerial_3"];
+var att_combos : Array[String] = ["new_ground_attack_1", "new_ground_attack_2", "new_ground_attack_3"];
+var magic_combos : Array[String] = ["cast", "cast", "cast_finisher"]
 
 var direction = -1;
 var x_direction = 0;
@@ -57,7 +57,6 @@ var nudgeObj;
 #endregion
 
 func _ready() -> void:
-	print_debug(posmod(-1, 5))
 	hp = base_hp;
 	poise = base_poise;
 	
@@ -419,31 +418,40 @@ func end_state(next_state) -> void:
 #region Helpers
 
 func useCard():
+	
 	current_card = owned_deck._get_current_card();
+	
 	if current_card is PlayerAttackCard:
 		attack = current_card.value;
+		
 		match current_state:
 			STATES.IDLE:
 				transition_state(STATES.ATTACKING);
 				owned_deck._use_card();
+				
 			STATES.RUNNING:
 				transition_state(STATES.ATTACKING);
 				owned_deck._use_card();
+				
 			STATES.NUDGE:
 				transition_state(STATES.AERIAL);
 				owned_deck._use_card();
+				
 			STATES.JUMPING:
 				transition_state(STATES.AERIAL);
 				owned_deck._use_card();
+				
 			STATES.FALLING:
 				transition_state(STATES.AERIAL);
 				owned_deck._use_card();
+				
 			STATES.ATTACKING:
 				if current_card is MagicCard:
 					doAttack(magic_combos);
 				else:
 					doAttack(att_combos);
 				owned_deck._use_card();
+				
 			STATES.AERIAL:
 				if current_card is MagicCard:
 					velocity.y = -250;
@@ -451,7 +459,9 @@ func useCard():
 				else:
 					doAttack(aer_combos);
 				owned_deck._use_card();
+				
 		current_card = null;
+		
 	elif current_card is ReloadCard:
 		transition_state(STATES.USING);
 				
@@ -488,8 +498,10 @@ func checkTurn() -> void:
 		self.scale.x *= -1;
 		direction = x_direction;
 		
-func doAttack(combo_anim_names : Array) -> void:
-	if combo_anim == combo_length:
+func doAttack(combo_anim_names : Array[String]) -> void:
+	hit_dmg_multi = 1.0; #might cause the exploit i have in mind
+	if combo_anim >= combo_length:
+		hit_dmg_multi = 1.5;
 		anims.play(combo_anim_names[2]);
 	elif combo_anim % 2 == 0:
 		anims.play(combo_anim_names[1]);
