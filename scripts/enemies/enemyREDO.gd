@@ -79,7 +79,7 @@ func _physics_process(_delta) -> void:
 				
 		STATES.DEATH:
 			if !anims.is_playing():
-				Global.changePortrait("win_blink");
+				Global.player[0].changePortrait("win_blink");
 				self.queue_free();
 				
 	move_and_slide();

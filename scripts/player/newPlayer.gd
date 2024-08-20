@@ -5,11 +5,12 @@ class_name Player extends CharacterBody2D
 @onready var camera = self.get_node("camera");
 @onready var body = self.get_node("body");
 @onready var hitbox = self.get_node("hitbox");
-#@onready var particles = self.get_node("particles");
 @onready var ray = self.get_node("Ray");
+@onready var Player_UI = self.get_node("Player_UI");
+
 
 #region Declarations
-enum STATES {IDLE, RUNNING, JUMPING, FALLING, ROLLING, ATTACKING, AERIAL, KNOCKBACK, NUDGE};
+enum STATES {IDLE, RUNNING, JUMPING, FALLING, ROLLING, ATTACKING, AERIAL, KNOCKBACK, NUDGE, USING};
 const base_hp = 100.0;
 const base_poise = 7;
 const gravity = 980
@@ -20,11 +21,17 @@ var initial_state = STATES.IDLE;
 var current_state = initial_state;
 var aer_combos = ["new_aerial_1", "new_aerial_2", "new_aerial_3"];
 var att_combos = ["new_ground_attack_1", "new_ground_attack_2", "new_ground_attack_3"];
+var magic_combos = ["cast", "cast", "cast"]
 
 var direction = -1;
 var x_direction = 0;
 
-signal change_portrait;
+var cur_deck: Array[Card] = [MagicCard.new(1), MagicCard.new(1), MagicCard.new(1), MagicCard.new(1), MagicCard.new(1)];
+var owned_deck : Deck;
+var current_card : Card = null;
+var locked : bool = false;
+
+var proj = preload("res://scenes/projectile.tscn");
 
 var combo_anim = 1;
 var combo_length = 3; # has to be >0
@@ -33,10 +40,10 @@ var ROLL_SPEED = 400.0
 var JUMP_VELOCITY = -425.0;
 var hp : float;
 var poise;
-var invince = false;
-var invince_time = .6;
+var invince : bool = false;
+var invince_time : float = .6;
 var attack = 1;
-var knockback = 100;
+var knockback : int = 100;
 @export var hit_dmg_multi: float = 1.0;
 @export var hit_knockback_multi: float  = 1.0;
 @export var hit_knockback_multi_up: float  = 1.0;
@@ -50,8 +57,14 @@ var nudgeObj;
 #endregion
 
 func _ready() -> void:
+	print_debug(posmod(-1, 5))
 	hp = base_hp;
 	poise = base_poise;
+	
+	owned_deck = preload("res://scenes/deck.tscn").instantiate();
+	add_child(owned_deck);
+	owned_deck.draw_to = Player_UI;
+	owned_deck._init_deck(cur_deck);
 
 func _process(_delta) -> void:
 	
@@ -62,7 +75,13 @@ func _process(_delta) -> void:
 	else:
 		var tween = get_tree().create_tween();
 		tween.tween_property(camera, "offset", Vector2(0, -30), 1);
-	pass
+	
+	Player_UI.get_node("./hp_back_back/hp_back/hp_bar").size.x = 36 * (hp / base_hp);
+	
+	if !locked && Input.is_action_just_pressed("rotate_left"):
+		owned_deck._rotate_back();
+	if !locked && Input.is_action_just_pressed("rotate_right"):
+		owned_deck._rotate_forward();
 
 func _physics_process(_delta) -> void:
 #universal pre update
@@ -78,10 +97,9 @@ func _physics_process(_delta) -> void:
 #region Debug
 	#print_debug(current_state);
 	if Input.is_action_just_pressed("debug1"):
-		anims.play("ground_attack_1");
+		transition_state(STATES.KNOCKBACK);
 	if Input.is_action_just_pressed("debug2"):
-		self.set_collision_layer_value(5, false);
-		self.set_collision_mask_value(5, false);
+		doMagicShoot();
 #endregion
 
 	match current_state:		
@@ -91,7 +109,7 @@ func _physics_process(_delta) -> void:
 			move_and_slide();
 			
 			if Input.is_action_just_pressed("attack"):
-				transition_state(STATES.AERIAL);
+				useCard();
 				aerial_action = false;
 			elif Input.is_action_just_pressed("special"):
 				aerial_action = false;
@@ -107,7 +125,7 @@ func _physics_process(_delta) -> void:
 			if nudging || (velocity.y >= 0 && !is_on_floor()):
 				transition_state(STATES.FALLING);
 			elif Input.is_action_just_pressed("attack"):
-				transition_state(STATES.ATTACKING);
+				useCard();
 			elif Input.is_action_just_pressed("special"):
 				transition_state(STATES.ROLLING);
 			elif Input.is_action_pressed("jump"):
@@ -127,7 +145,7 @@ func _physics_process(_delta) -> void:
 			elif Input.is_action_pressed("jump"):
 				transition_state(STATES.JUMPING);
 			elif Input.is_action_just_pressed("attack"):
-				transition_state(STATES.ATTACKING);
+				useCard();
 			elif Input.is_action_just_pressed("special"):
 				transition_state(STATES.ROLLING);
 			elif x_direction == 0:
@@ -142,7 +160,7 @@ func _physics_process(_delta) -> void:
 			
 			if Input.is_action_just_pressed("attack") && aerial_action:
 				aerial_action = false;
-				transition_state(STATES.AERIAL);
+				useCard();
 			elif Input.is_action_just_pressed("special") && aerial_action:
 				aerial_action = false;
 				transition_state(STATES.ROLLING);
@@ -160,7 +178,7 @@ func _physics_process(_delta) -> void:
 			
 			if Input.is_action_just_pressed("attack") && aerial_action:
 				aerial_action = false;
-				transition_state(STATES.AERIAL);
+				useCard();
 			elif Input.is_action_just_pressed("special") && aerial_action:
 				aerial_action = false;
 				transition_state(STATES.ROLLING);
@@ -215,7 +233,7 @@ func _physics_process(_delta) -> void:
 				if !is_on_floor():
 					transition_state(STATES.FALLING);
 				elif input_buffer == "attack" && combo_anim <= combo_length:
-					doAttack(att_combos);
+					useCard();
 					input_buffer = null;
 				elif input_buffer == "jump":
 					transition_state(STATES.JUMPING);
@@ -244,7 +262,7 @@ func _physics_process(_delta) -> void:
 			if !anims.is_playing():
 				checkTurn();
 				if input_buffer == "attack" && combo_anim <= combo_length:
-					doAttack(aer_combos);
+					useCard();
 					input_buffer = null;
 				elif input_buffer == "special":
 					transition_state(STATES.ROLLING);
@@ -263,6 +281,20 @@ func _physics_process(_delta) -> void:
 					transition_state(STATES.IDLE);
 				else: 
 					transition_state(STATES.FALLING);
+	
+	#USING -- animation for doing extra actions like reloading
+		STATES.USING:
+			velocity.y += gravity * _delta;
+			velocity.x = move_toward(velocity.x, 0, 15);
+			move_and_slide();
+			
+			if !anims.is_playing():
+				owned_deck._use_card();
+				transition_state(STATES.IDLE);
+			elif Input.is_action_just_pressed("special") && aerial_action:
+				aerial_action = false;
+				transition_state(STATES.ROLLING);
+			
 
 #END PHYSICS PROCESS ----------------------------------------------------------------	
 
@@ -317,18 +349,29 @@ func transition_state(next_state) -> bool:
 			aerial_action = true;
 			velocity.y *= .5;
 			velocity.x = velocity.x/2;
-			doAttack(att_combos);
+			if current_card is MagicCard:
+				doAttack(magic_combos);
+			else:
+				doAttack(att_combos);
 
 		STATES.AERIAL:
 			sprite.pause();
 			velocity.x *= .5;
-			doAttack(aer_combos);
+			if current_card is MagicCard:
+				velocity.y = -250;
+				doAttack(magic_combos);
+			else:
+				doAttack(aer_combos);
 
 		STATES.KNOCKBACK:
 			nudging = false;
 			ray.enabled = false;
 			sprite.play("knockback");
-			pass
+		
+		STATES.USING:
+			sprite.pause();
+			anims.play("reload");
+			locked = true;
 
 	current_state = next_state;
 	return true;
@@ -350,7 +393,6 @@ func end_state(next_state) -> void:
 			self.set_collision_mask_value(5, true);
 			invince = false;
 
-
 		STATES.ATTACKING:
 			anims.stop();
 			input_buffer = null;
@@ -368,12 +410,51 @@ func end_state(next_state) -> void:
 			aerial_action = true;
 			ray.enabled = true;
 			invince = false;
-			pass
-	pass
+
+		STATES.USING:
+			anims.stop();
+			locked = false;
 #endregion
 
 #region Helpers
 
+func useCard():
+	current_card = owned_deck._get_current_card();
+	if current_card is PlayerAttackCard:
+		attack = current_card.value;
+		match current_state:
+			STATES.IDLE:
+				transition_state(STATES.ATTACKING);
+				owned_deck._use_card();
+			STATES.RUNNING:
+				transition_state(STATES.ATTACKING);
+				owned_deck._use_card();
+			STATES.NUDGE:
+				transition_state(STATES.AERIAL);
+				owned_deck._use_card();
+			STATES.JUMPING:
+				transition_state(STATES.AERIAL);
+				owned_deck._use_card();
+			STATES.FALLING:
+				transition_state(STATES.AERIAL);
+				owned_deck._use_card();
+			STATES.ATTACKING:
+				if current_card is MagicCard:
+					doAttack(magic_combos);
+				else:
+					doAttack(att_combos);
+				owned_deck._use_card();
+			STATES.AERIAL:
+				if current_card is MagicCard:
+					velocity.y = -250;
+					doAttack(magic_combos);
+				else:
+					doAttack(aer_combos);
+				owned_deck._use_card();
+		current_card = null;
+	elif current_card is ReloadCard:
+		transition_state(STATES.USING);
+				
 #Can't directly change velo in anims, and relative position changes are wierd to implement and questionable physics wise
 func animVeloc(veloX: int, veloY: int) -> void:
 	velocity.x += direction * veloX;
@@ -392,7 +473,7 @@ func nudge(nudger: Node) -> void:
 func hit(damage : int, dmg_knockback : Vector2) -> void:
 	if !invince:
 		hp -= damage;
-		self.emit_signal("change_portrait", "hurt");
+		changePortrait("hurt");
 		poise -= damage;
 		invince = true;
 		if poise <= 0:
@@ -415,6 +496,20 @@ func doAttack(combo_anim_names : Array) -> void:
 	elif combo_anim % 2 == 1:
 		anims.play(combo_anim_names[0]);
 	combo_anim += 1;
+	
+func doMagicShoot():
+	var p = proj.instantiate();
+	owner.add_child(p);
+	p.visible = true;
+	p.position.x = position.x + direction * 30;
+	p.position.y = position.y;
+	p.speed = 500 * direction;
+	p.body_entered.connect(_on_hitbox_body_entered);
+	
+#Probably should do something different to control ui, but
+func changePortrait(anim_name : String) -> void:
+	if Player_UI != null:
+		Player_UI.get_node("faces").play(anim_name);
 
 #endregion
 
@@ -427,6 +522,6 @@ func _on_hitbox_body_entered(_obj : Node2D) -> void:
 	if _obj.has_method("hit"):
 		var dmg = ceil(attack * hit_dmg_multi);
 		_obj.hit(dmg, Vector2(sign(_obj.position.x - self.position.x) * 100 * hit_knockback_multi , -150 * hit_knockback_multi_up));
-		self.change_portrait.emit("yah");
+		changePortrait("yah");
 
 #endregion

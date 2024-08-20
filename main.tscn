@@ -1,7 +1,6 @@
-[gd_scene load_steps=18 format=4 uid="uid://dhhomhd7wggpg"]
+[gd_scene load_steps=16 format=4 uid="uid://dhhomhd7wggpg"]
 
 [ext_resource type="PackedScene" uid="uid://ctcvqgc0oecb6" path="res://scenes/player.tscn" id="1_ddtma"]
-[ext_resource type="Script" path="res://deck.gd" id="3_i8h53"]
 [ext_resource type="TileSet" uid="uid://cfw01qk4b5so6" path="res://assets/tileset.tres" id="4_61iog"]
 [ext_resource type="Texture2D" uid="uid://ma55s6lwk50q" path="res://testArt/new/stringstar fields/background_0.png" id="4_327uw"]
 [ext_resource type="PackedScene" uid="uid://bcsqri2c3e5u3" path="res://scenes/test_pickup.tscn" id="4_hpnsa"]
@@ -9,7 +8,6 @@
 [ext_resource type="Texture2D" uid="uid://co1tfxr2aq5c7" path="res://icon.svg" id="6_nulrp"]
 [ext_resource type="Texture2D" uid="uid://0k60qhhrhhi5" path="res://testArt/new/stringstar fields/background_2.png" id="6_sgc6k"]
 [ext_resource type="PackedScene" uid="uid://ds423wa3r5uax" path="res://scenes/enemyREDO.tscn" id="6_xrl33"]
-[ext_resource type="PackedScene" uid="uid://dt3o5v6qhf3uq" path="res://scenes/player_ui.tscn" id="7_0ffdr"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gpa24"]
 resource_local_to_scene = true
@@ -44,9 +42,6 @@ tile_set = ExtResource("4_61iog")
 unique_name_in_owner = true
 position = Vector2(-104, 521)
 scale = Vector2(1.5, 1.5)
-
-[node name="deck" type="Node" parent="player"]
-script = ExtResource("3_i8h53")
 
 [node name="pick_area" parent="." instance=ExtResource("4_hpnsa")]
 position = Vector2(-58, 492)
@@ -130,8 +125,6 @@ shape = SubResource("RectangleShape2D_lh4nj")
 [node name="island 5" type="CollisionShape2D" parent="Walls"]
 position = Vector2(1076, -82)
 shape = SubResource("RectangleShape2D_em1bi")
-
-[node name="Player_UI" parent="." instance=ExtResource("7_0ffdr")]
 
 [node name="new_ground_layer" type="TileMapLayer" parent="."]
 position = Vector2(-32, 279)
