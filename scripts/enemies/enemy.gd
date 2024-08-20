@@ -31,7 +31,7 @@ func transition_state(next_state, data):
 	match next_state:
 		STATES.KNOCKBACK:
 			apply_central_impulse(data);
-			sprite.play("knockback");
+			#sprite.play("knockback");
 		STATES.IDLE:
 			linear_velocity.x = 0;
 			sprite.play("idle")

@@ -20,10 +20,10 @@ var draw_to : CanvasLayer;
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	reload_val = 1;
-	max_size = 4;
 	pass # Replace with function body.
 
-func _init_deck(owner_cards : Array[Card]):
+func _init_deck(owner_cards : Array[Card], max_card : int = 5):
+	max_size = max_card;
 	cards.clear();
 	battle_cards.clear();
 	size = 0;

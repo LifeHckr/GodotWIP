@@ -26,7 +26,7 @@ var magic_combos : Array[String] = ["cast", "cast", "cast_finisher"]
 var direction = -1;
 var x_direction = 0;
 
-var cur_deck: Array[Card] = [MagicCard.new(1), MagicCard.new(1), MagicCard.new(1), MagicCard.new(1), MagicCard.new(1)];
+var cur_deck: Array[Card] = [MagicCard.new(1), MagicCard.new(1), MagicCard.new(1), MagicCard.new(1), MagicCard.new(1), PlayerAttackCard.new(2), PlayerAttackCard.new(2), PlayerAttackCard.new(2), PlayerAttackCard.new(2), PlayerAttackCard.new(2), PlayerAttackCard.new(2)];
 var owned_deck : Deck;
 var current_card : Card = null;
 var locked : bool = false;
@@ -63,7 +63,7 @@ func _ready() -> void:
 	owned_deck = preload("res://scenes/deck.tscn").instantiate();
 	add_child(owned_deck);
 	owned_deck.draw_to = Player_UI;
-	owned_deck._init_deck(cur_deck);
+	owned_deck._init_deck(cur_deck, 12);
 
 func _process(_delta) -> void:
 	

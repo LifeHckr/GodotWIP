@@ -1,6 +1,6 @@
 [gd_scene load_steps=28 format=3 uid="uid://dt3o5v6qhf3uq"]
 
-[ext_resource type="Texture2D" uid="uid://d4cghnh5ylvl5" path="res://testArt/old/faces.png" id="1_7ejs1"]
+[ext_resource type="Texture2D" uid="uid://bcjxwuirgdvoe" path="res://testArt/faces.png" id="1_7ejs1"]
 [ext_resource type="PackedScene" uid="uid://cyywra1fues8v" path="res://scenes/ui/hp_back_back.tscn" id="2_1ym0a"]
 [ext_resource type="Texture2D" uid="uid://drpsqpsbd5x0s" path="res://testArt/using/cardEmpty.png" id="3_uu8lo"]
 [ext_resource type="Texture2D" uid="uid://dpdimedntn73i" path="res://testArt/using/cardAttack.png" id="4_msk2t"]
@@ -512,8 +512,6 @@ position = Vector2(580, 300)
 sprite_frames = SubResource("SpriteFrames_c27oe")
 animation = &"yah"
 autoplay = "default_blink"
-frame = 4
-frame_progress = 1.0
 
 [node name="hp_back_back" parent="." instance=ExtResource("2_1ym0a")]
 offset_left = 583.0
