@@ -1,34 +1,37 @@
 class_name EnemyChar extends CharacterBody2D
 
-@onready var sprite = self.get_node("sprite");
-@onready var anims = sprite.get_node("anims");
-@onready var body = self.get_node("body");
-@onready var hitbox = self.get_node("hitbox");
-@onready var hp_bar = self.get_node("./hp_back_back/hp_back/%hp_bar");
-@onready var ground_check = self.get_node("ground_checker");
+@onready var sprite : AnimatedSprite2D = self.get_node("sprite");
+@onready var anims : AnimationPlayer = sprite.get_node("anims");
+@onready var body : CollisionShape2D = self.get_node("body");
+@onready var hitbox : Area2D = self.get_node("hitbox");
+@onready var hp_bar : ColorRect = self.get_node("./hp_back_back/hp_back/%hp_bar");
+@onready var ground_check : RayCast2D = self.get_node("ground_checker");
 
 @onready var PARTICLES = preload("res://scenes/hit_particles.tscn");
+@onready var Phys = preload("res://testArt/using/Effect and Bullet 16x16/purple/tile190.png");
+@onready var Fire = preload("res://testArt/using/Effect and Bullet 16x16/red/tile030.png");
 
-var hp_bar_length;
+
+var hp_bar_length : float;
 
 
-const SPEED = 100.0
-const JUMP_VELOCITY = -400.0
-var attack = 5;
+const SPEED : float = 100.0
+const JUMP_VELOCITY : float = -400.0
+var attack : int = 5;
 const base_hp : float = 7;
 var hp : float;
-var poise;
-const base_poise = 4;
+var poise : int;
+const base_poise : int = 4;
 
 enum STATES {IDLE, WALKING, ATTACKING, KNOCKBACK, PATROLLING, CHASING, DEATH};
-var current_state = STATES.IDLE
-var current_target;
+var current_state : STATES = STATES.IDLE
+var current_target : Node2D;
 
 var vision_range : float = 250.0;
 var direction : float = -1.0;
 
-var gravity = 980
-var friction = 12;
+var gravity : float = 980;
+var friction : int = 12;
 
 
 func _ready() -> void:
@@ -84,7 +87,7 @@ func _physics_process(_delta) -> void:
 				
 	move_and_slide();
 
-func transition_state(next_state, data) -> bool:
+func transition_state(next_state : STATES, data) -> bool:
 	if current_state == next_state:
 		return false;
 	match next_state:
@@ -116,12 +119,12 @@ func transition_state(next_state, data) -> bool:
 	current_state = next_state;
 	return true;
 
-func hit(damage : int, knockback : Vector2) -> void:
+func hit(damage : int, knockback : Vector2, element : String) -> void:
 	var particles = PARTICLES.instantiate();
 	add_child(particles);
+	particles.texture = self.get(element);
 	particles.emitting = true;
 	anims.play("interrupt");
-	
 	
 	hp -= damage;
 	updateHP();
@@ -168,6 +171,6 @@ func _on_hitbox_body_entered(obj: Node2D) -> void:
 		obj.hit(dmg, Vector2(sign(obj.position.x - self.position.x) * 200 , -180));
 
 		
-func _on_body_shape_entered(_body_rid, _body, _body_shape_index, _local_shape_index):
-	print_debug(_body);
-	pass # Replace with function body.
+#func _on_body_shape_entered(_body_rid, _body, _body_shape_index, _local_shape_index):
+	#print_debug(_body);
+	#pass # Replace with function body.

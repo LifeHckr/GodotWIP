@@ -1,7 +1,7 @@
 class_name State extends RefCounted
 var player : Node2D;
 
-signal ending;
+#signal ending;
 
 func _init(owner : Node2D):
 	player = owner;

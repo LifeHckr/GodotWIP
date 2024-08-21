@@ -1541,6 +1541,7 @@ debug_color = Color(0, 0.6, 0.701961, 0.419608)
 collision_layer = 2
 collision_mask = 2
 monitoring = false
+metadata/element = "Phys"
 
 [node name="colShape" type="CollisionShape2D" parent="hitbox"]
 position = Vector2(-16, 0)
@@ -1548,6 +1549,3 @@ scale = Vector2(1.2, 1)
 shape = SubResource("CapsuleShape2D_q6ia4")
 
 [node name="Player_UI" parent="." instance=ExtResource("39_hf4s3")]
-
-[connection signal="area_entered" from="hitbox" to="." method="_on_hitbox_body_entered"]
-[connection signal="body_entered" from="hitbox" to="." method="_on_hitbox_body_entered"]

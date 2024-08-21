@@ -2,6 +2,7 @@ class_name Card extends Resource
 var value : int;
 var sprite = preload("res://testArt/using/cardEmpty.png");
 var exhaust : bool = false;
+var combo_exhaust : bool = false;
 var can_combo : bool = true;
 signal used;
 
