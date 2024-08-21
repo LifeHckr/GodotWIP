@@ -12,7 +12,8 @@ func _update(_delta) -> void:
 
 func _physics_update(_delta) -> void:
 	player.velocity.x = move_toward(player.velocity.x, 0, 12);
-	player.velocity.y += player.gravity * _delta;
+	if !player.is_on_floor():
+		player.velocity.y += player.gravity * _delta;
 	player.move_and_slide();
 
 	if Input.is_action_just_pressed("attack") && player.combo_anim <= player.combo_length:
@@ -22,9 +23,6 @@ func _physics_update(_delta) -> void:
 	if Input.is_action_pressed("special"):
 		player.input_buffer = "special";
 	
-	if player.nudging: #idk if this si still necessary for att state
-		player.transition_state(player.STATES.FALLING);
-		
 	if !player.anims.is_playing(): # look into doing based on progress, could skip recovery frames
 		player.checkTurn();
 		if !player.is_on_floor():

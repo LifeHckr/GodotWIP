@@ -4,6 +4,7 @@ extends CanvasLayer
 @onready var combo_controller : Control = card_controller.get_node("Combo_Control");
 @onready var combo_sprites : Array[Sprite2D] = [combo_controller.get_node("Card1"), combo_controller.get_node("Card2"), combo_controller.get_node("Card3")]
 @onready var card_anims : AnimationPlayer = card_controller.get_node("anims");
+@onready var card_details : RichTextLabel = card_controller.get_node("Card_Details");
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

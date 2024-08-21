@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3 uid="uid://bpe4j60fmwcn2"]
+
+[ext_resource type="Texture2D" uid="uid://ct0db5xnj2xms" path="res://testArt/using/particles/green/tile052.png" id="1_4sa6f"]
+[ext_resource type="Script" path="res://scripts/things/hit_particles.gd" id="2_x0n6w"]
+
+[node name="particles" type="CPUParticles2D"]
+modulate = Color(1, 1, 1, 0.631373)
+z_index = 10
+emitting = false
+amount = 5
+lifetime = 0.4
+one_shot = true
+explosiveness = 1.0
+fixed_fps = 30
+draw_order = 1
+texture = ExtResource("1_4sa6f")
+emission_shape = 1
+emission_sphere_radius = 16.0
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 98)
+initial_velocity_min = 10.0
+initial_velocity_max = 17.0
+angular_velocity_min = -30.0
+angular_velocity_max = 30.0
+orbit_velocity_max = 0.5
+script = ExtResource("2_x0n6w")
+
+[connection signal="finished" from="." to="." method="_on_finished"]

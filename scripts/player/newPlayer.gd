@@ -15,8 +15,8 @@ class_name Player extends CharacterBody2D
 
 #region Declarations
 #STATES ==============================================================================================
-enum STATES {IDLE, RUNNING, JUMPING, FALLING, ROLLING, ATTACKING, AERIAL, KNOCKBACK, NUDGE, USING};
-var states : Array[State] = [PlayerIdle.new(self), PlayerRunning.new(self), PlayerJumping.new(self), PlayerFalling.new(self), PlayerRolling.new(self), PlayerAttacking.new(self), PlayerAerial.new(self), PlayerKnockback.new(self), PlayerNudge.new(self), PlayerUsing.new(self)];
+enum STATES {IDLE, RUNNING, JUMPING, FALLING, ROLLING, ATTACKING, AERIAL, KNOCKBACK, USING};
+var states : Array[State] = [PlayerIdle.new(self), PlayerRunning.new(self), PlayerJumping.new(self), PlayerFalling.new(self), PlayerRolling.new(self), PlayerAttacking.new(self), PlayerAerial.new(self), PlayerKnockback.new(self), PlayerUsing.new(self)];
 var initial_state : STATES = STATES.IDLE;
 var current_state : STATES = initial_state;
 const aer_combos : Array[String] = ["new_aerial_1", "new_aerial_2", "new_aerial_3"];
@@ -80,6 +80,8 @@ func _ready() -> void:
 	owned_deck._init_deck(cur_deck, 12);
 	
 	hitbox.body_entered.connect(_on_hitbox_body_entered.bind());
+	
+	Player_UI.combo_controller.visible = combo_unlocked;
 
 func _process(_delta) -> void:
 	
@@ -93,15 +95,16 @@ func _process(_delta) -> void:
 	
 	Player_UI.get_node("./hp_back_back/hp_back/hp_bar").size.x = 36 * (hp / base_hp);
 
+
 func _physics_process(_delta : float) -> void:
 #universal pre update
-
+	if !"INTANGIBLE" in states[current_state]:
+		nudgeFix();
 	x_direction = Input.get_axis("move_left", "move_right");
 
 	if ray.is_colliding():
 		nudgeObj = ray.get_collider();
 		if nudgeObj.has_method("nudge"):
-			nudging = true;
 			nudgeObj.nudge(self.position);
 
 #region Debug
@@ -184,12 +187,23 @@ func animVeloc(veloX: int, veloY: int) -> void:
 func on_pickup(obj : Node) -> void:
 	obj.queue_free();
 
-func nudge(nudger: Node) -> void:
-	velocity.x = sign(nudger.position.x - self.position.x) * -100;
-	velocity.y -= 2;
-	x_direction = 0;
-	move_and_slide();
+func nudge(_nudger: Node) -> void:
+	pass#velocity.x = sign(_nudger.position.x - self.position.x) * -100;
+	#velocity.y -= 2;
+	#x_direction = 0;
+	#move_and_slide();
 	
+func nudgeFix() -> void:
+	#temp new nudge fix
+	ray.enabled = true;
+	var is_colliding = ray.is_colliding();
+	nudgeObj = ray.get_collider();
+	if is_colliding && nudgeObj.has_method("nudge"):
+		velocity.y = -1;
+	set_collision_layer_value(5, !ray.is_colliding());
+	set_collision_mask_value(5, !ray.is_colliding());
+
+
 func hit(damage : int, dmg_knockback : Vector2) -> void:
 	if !invince:
 		hp -= damage;

@@ -15,15 +15,12 @@ var locked : bool = false;
 var combo_cards : Array[Card];
 var cards_in_combo : int = 0;
 
-
-#TODO: add_next, add_prev
+#TODO: 
 #	memory management?
-
 
 #region Management
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	reload_val = 1;
 	pass # Replace with function body.
 	
 func _process(_delta: float) -> void:
@@ -33,9 +30,12 @@ func _process(_delta: float) -> void:
 		_rotate_forward();
 	if !locked && Input.is_action_just_pressed("remCombo"):
 		_rem_cur_combo();
+		
+	if draw_to != null:
+		draw_to.card_details.text = str(_get_current_card().value) + "\n" + str(_get_remaining());
 
 func _init_deck(owner_cards : Array[Card], max_card : int = 5) -> void:
-#endregion
+
 	max_size = max_card;
 	cards.clear();
 	battle_cards.clear();
@@ -65,7 +65,7 @@ func _drawDeck(offset : int = 0) -> void:
 		card_controller.get_node("Prev_Card").texture = cards[_position_from_cursor(-1 + offset)].sprite;
 		card_controller.get_node("Card_Forw1").texture = cards[_position_from_cursor(1 + offset)].sprite;
 		card_controller.get_node("Card_Forw2").texture = cards[_position_from_cursor(2 + offset)].sprite;
-	
+			
 func _drawCombo() -> void:
 	if draw_to == null:
 		return
@@ -74,8 +74,11 @@ func _drawCombo() -> void:
 			draw_to.combo_sprites[x].texture = combo_cards[x].sprite;
 		else:
 			draw_to.combo_sprites[x].texture = empty;
-
+#endregion
 #region Helpers
+func _get_remaining() -> int:
+	return cards_remaining;
+
 func _add_front(card : Card, ignoreLimit : bool = false) -> bool:
 	if size >= max_size && !ignoreLimit:
 		return false;
@@ -203,9 +206,9 @@ func _use_combo_card():
 	cards_in_combo -= 1;
 	_drawCombo();
 
-func _clear_combo():
+func _clear_combo(exhaust : bool = true):
 	while cards_in_combo > 0:
-		_rem_cur_combo(true);
+		_rem_cur_combo(exhaust);
 	
 func _reload(_reload_card : Card) -> void:
 	#get cards from useable cards
@@ -232,6 +235,7 @@ func _reload(_reload_card : Card) -> void:
 
 func _reset_cards() -> void:
 	reload_val = 1;
+	_clear_combo();
 	for x in battle_cards:
 		x._reset();
 	_reload(null);

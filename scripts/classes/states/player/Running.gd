@@ -11,7 +11,8 @@ func _update(_delta) -> void:
 
 func _physics_update(_delta) -> void:
 	player.checkTurn();
-	player.velocity.y += player.gravity * _delta;
+	if !player.is_on_floor():
+		player.velocity.y += player.gravity * _delta;
 	player.velocity.x = player.SPEED * player.x_direction;
 	player.move_and_slide();
 	

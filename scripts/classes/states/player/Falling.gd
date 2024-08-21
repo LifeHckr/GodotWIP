@@ -11,7 +11,8 @@ func _update(_delta) -> void:
 
 func _physics_update(_delta) -> void:
 	player.checkTurn();
-	player.velocity.y += player.gravity * _delta;
+	if !player.is_on_floor():
+		player.velocity.y += player.gravity * _delta;
 	player.velocity.x = player.SPEED * player.x_direction;
 	player.move_and_slide();
 	
@@ -25,11 +26,9 @@ func _physics_update(_delta) -> void:
 	elif Input.is_action_just_pressed("special") && player.aerial_action:
 		player.aerial_action = false;
 		player.transition_state(player.STATES.ROLLING);
-	elif player.nudging:
-		player.transition_state(player.STATES.NUDGE);
 	elif player.is_on_floor() && player.x_direction != 0:
 		player.transition_state(player.STATES.RUNNING);
-	elif player.is_on_floor() && player.velocity.y >= 0:
+	elif player.is_on_floor() && player.velocity.y >= 0 && !player.nudging:
 		player.transition_state(player.STATES.IDLE);
 	
 func _handle_input() -> void:
@@ -39,4 +38,5 @@ func _start() -> void:
 	player.sprite.play("falling");
 
 func _end() -> void:
+	player.nudging = false;
 	pass

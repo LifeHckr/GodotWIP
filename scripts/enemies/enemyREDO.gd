@@ -8,8 +8,8 @@ class_name EnemyChar extends CharacterBody2D
 @onready var ground_check : RayCast2D = self.get_node("ground_checker");
 
 @onready var PARTICLES = preload("res://scenes/hit_particles.tscn");
-@onready var Phys = preload("res://testArt/using/Effect and Bullet 16x16/purple/tile190.png");
-@onready var Fire = preload("res://testArt/using/Effect and Bullet 16x16/red/tile030.png");
+@onready var Phys = preload("res://testArt/using/particles/purple/tile190.png");
+@onready var Fire = preload("res://testArt/using/particles/red/tile030.png");
 
 
 var hp_bar_length : float;
@@ -43,7 +43,8 @@ func _process(_delta: float) -> void:
 	pass
 
 func _physics_process(_delta) -> void:
-	velocity.y += gravity * _delta;
+	if !is_on_floor():
+		velocity.y += gravity * _delta;
 	velocity.x = move_toward(velocity.x, 0, friction);
 	
 	match current_state:
@@ -160,9 +161,9 @@ func animVeloc(veloX : float, veloY : float) -> void:
 	velocity.y = veloY;
 
 func nudge(nudgerPos : Vector2) -> void:
-	velocity = Vector2(sign(nudgerPos.x - self.position.x) * -60, 0);
+	velocity = Vector2(sign(nudgerPos.x - self.position.x) * -70, 0);
 	if sign(nudgerPos.x - self.position.x) == 0:
-		velocity = Vector2(30, 0);
+		velocity = Vector2(60, 0);
 	move_and_slide();
 
 func _on_hitbox_body_entered(obj: Node2D) -> void:

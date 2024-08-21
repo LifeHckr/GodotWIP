@@ -1,5 +1,7 @@
 class_name PlayerRolling extends PlayerState
 
+var INTANGIBLE;
+
 func _ready() -> void:
 	pass
 	
@@ -8,7 +10,8 @@ func _update(_delta) -> void:
 
 func _physics_update(_delta) -> void:
 	player.invince = true;
-	player.velocity.y += player.gravity * _delta;
+	if !player.is_on_floor():
+		player.velocity.y += player.gravity * _delta;
 	player.velocity.x = move_toward(player.velocity.x, player.direction * player.ROLL_SPEED, 40);
 	player.move_and_slide();
 	

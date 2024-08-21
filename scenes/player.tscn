@@ -1,4 +1,4 @@
-[gd_scene load_steps=114 format=3 uid="uid://ctcvqgc0oecb6"]
+[gd_scene load_steps=115 format=3 uid="uid://ctcvqgc0oecb6"]
 
 [ext_resource type="Script" path="res://scripts/player/newPlayer.gd" id="1_km3ob"]
 [ext_resource type="Texture2D" uid="uid://bnbwul07t2hcd" path="res://testArt/mask.png" id="2_gcwlg"]
@@ -54,7 +54,7 @@
 [ext_resource type="Texture2D" uid="uid://cr1ardn3ksum1" path="res://testArt/using/Adventurer-1.5/Individual Sprites/adventurer-items-00.png" id="51_tc6iw"]
 [ext_resource type="Texture2D" uid="uid://cye0y0y3trs30" path="res://testArt/using/Adventurer-1.5/Individual Sprites/adventurer-items-02.png" id="52_3jmp2"]
 [ext_resource type="Texture2D" uid="uid://7g6f3s1rduae" path="res://testArt/using/Adventurer-1.5/Individual Sprites/adventurer-items-01.png" id="53_8lud4"]
-[ext_resource type="Script" path="res://scenes/PlayerAttack.gd" id="54_ube5d"]
+[ext_resource type="Script" path="res://scripts/player/PlayerAttack.gd" id="54_ube5d"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2lre6"]
 atlas = ExtResource("3_s4isx")
@@ -1457,6 +1457,35 @@ tracks/1/keys = {
 "values": [0, 1, 2, 3, 4, 5, 6, 7, 5]
 }
 
+[sub_resource type="Animation" id="Animation_aim4y"]
+resource_name = "reload_cont"
+length = 0.500003
+step = 0.0166667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"use_reload"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.083333, 0.15, 0.466667),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [5, 6, 7, 5]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_qy058"]
 _data = {
 "RESET": SubResource("Animation_ydvf6"),
@@ -1468,7 +1497,8 @@ _data = {
 "new_ground_attack_1": SubResource("Animation_7d4mb"),
 "new_ground_attack_2": SubResource("Animation_1udkt"),
 "new_ground_attack_3": SubResource("Animation_lwnkd"),
-"reload": SubResource("Animation_ikkmy")
+"reload": SubResource("Animation_ikkmy"),
+"reload_cont": SubResource("Animation_aim4y")
 }
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lfy1r"]
@@ -1481,16 +1511,15 @@ radius = 9.0
 [node name="player" type="CharacterBody2D" groups=["players"]]
 collision_layer = 28
 collision_mask = 29
-collision_priority = 4.0
 platform_floor_layers = 4294967041
 platform_wall_layers = 1
-safe_margin = 1.0
+safe_margin = 0.1
 script = ExtResource("1_km3ob")
 
 [node name="Ray" type="RayCast2D" parent="."]
 z_index = 2
-position = Vector2(-9, 19)
-target_position = Vector2(21, 0)
+position = Vector2(-8, 19)
+target_position = Vector2(16, 0)
 collision_mask = 16
 hit_from_inside = true
 

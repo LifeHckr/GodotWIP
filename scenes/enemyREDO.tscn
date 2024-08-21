@@ -354,10 +354,12 @@ radius = 6.0
 height = 20.0
 
 [node name="enemy" type="CharacterBody2D"]
-collision_layer = 18
+collision_layer = 82
 collision_mask = 19
-collision_priority = 10.0
-safe_margin = 1.0
+collision_priority = 9.0
+platform_on_leave = 2
+platform_floor_layers = 4294901761
+safe_margin = 0.1
 script = ExtResource("1_utblw")
 
 [node name="sprite" type="AnimatedSprite2D" parent="." groups=["enemy"]]

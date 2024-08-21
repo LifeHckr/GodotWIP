@@ -1,6 +1,7 @@
 class_name PlayerKnockback extends PlayerState
 
 var STATIC;
+var INTANGIBLE;
 
 func _ready() -> void:
 	pass
@@ -10,7 +11,8 @@ func _update(_delta) -> void:
 
 func _physics_update(_delta) -> void:
 	player.invince = true;
-	player.velocity.y += player.gravity * _delta;
+	if !player.is_on_floor():
+		player.velocity.y += player.gravity * _delta;
 	player.velocity.x = move_toward(player.velocity.x, 0, 12);
 	player.move_and_slide();
 	

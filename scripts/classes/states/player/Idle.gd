@@ -11,10 +11,11 @@ func _update(_delta) -> void:
 	pass
 
 func _physics_update(_delta) -> void:
-	player.velocity.y += player.gravity * _delta;
+	if !player.is_on_floor():
+		player.velocity.y += player.gravity * _delta;
 	player.move_and_slide();
 			
-	if player.nudging || (player.velocity.y >= 0 && !player.is_on_floor()):
+	if (player.velocity.y >= 0 && !player.is_on_floor()):
 		player.transition_state(player.STATES.FALLING);
 	elif !player.owned_deck.locked && Input.is_action_just_pressed("addCombo"):
 		player.doComboAction();

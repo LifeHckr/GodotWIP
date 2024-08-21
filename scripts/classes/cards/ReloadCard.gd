@@ -7,10 +7,10 @@ func _init(v : int = 0):
 
 #Returns true if card is used (removed from active use, until reload)
 func _use() -> bool:
-	if value == 1:
+	value -= 1;
+	if value <= 0:
 		used.emit(self);
 		return true;
 	else:
-		value -= 1;
 		return false;
 	
