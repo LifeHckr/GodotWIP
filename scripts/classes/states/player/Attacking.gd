@@ -29,7 +29,7 @@ func _physics_update(_delta) -> void:
 		player.checkTurn();
 		if !player.is_on_floor():
 			player.transition_state(player.STATES.FALLING);
-		elif player.input_buffer == "attack" && player.combo_anim <= player.combo_length:
+		elif (player.doing_combo || player.input_buffer == "attack") && player.combo_anim <= player.combo_length:
 			player.useCard();
 			player.input_buffer = "";
 		elif player.input_buffer == "jump":
@@ -55,6 +55,7 @@ func _start() -> void:
 		player.doAttack(player.att_combos);
 
 func _end() -> void:
+	player.endCombo();
 	player.anims.stop();
 	player.input_buffer = "";
 	player.combo_anim = 1;

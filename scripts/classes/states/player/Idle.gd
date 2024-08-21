@@ -16,6 +16,8 @@ func _physics_update(_delta) -> void:
 			
 	if player.nudging || (player.velocity.y >= 0 && !player.is_on_floor()):
 		player.transition_state(player.STATES.FALLING);
+	elif !player.owned_deck.locked && Input.is_action_just_pressed("addCombo"):
+		player.doComboAction();
 	elif Input.is_action_just_pressed("attack"):
 		player.useCard();
 	elif Input.is_action_just_pressed("special"):

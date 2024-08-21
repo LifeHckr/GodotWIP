@@ -1,5 +1,5 @@
 extends Node
-@onready var player = get_tree().get_nodes_in_group("players");
+@onready var player : Array[Node] = get_tree().get_nodes_in_group("players");
 
 
 
@@ -18,7 +18,7 @@ func delayed_call(object : Node, function_name : String, delay : float) -> void:
 	if !object.has_method(function_name):
 		return;
 
-	var timer = Timer.new();
+	var timer : Timer = Timer.new();
 	timer.timeout.connect(Callable(object, function_name));
 	timer.one_shot = true;
 	timer.autostart = true;

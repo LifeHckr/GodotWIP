@@ -13,7 +13,9 @@ func _physics_update(_delta) -> void:
 	player.velocity.y += player.gravity * _delta;
 	player.move_and_slide();
 	
-	if Input.is_action_just_pressed("attack"):
+	if !player.owned_deck.locked && Input.is_action_just_pressed("addCombo"):
+		player.doComboAction();
+	elif Input.is_action_just_pressed("attack"):
 		player.useCard();
 		player.aerial_action = false;
 	elif Input.is_action_just_pressed("special"):

@@ -120,7 +120,7 @@ func transition_state(next_state : STATES, data) -> bool:
 	return true;
 
 func hit(damage : int, knockback : Vector2, element : String) -> void:
-	var particles = PARTICLES.instantiate();
+	var particles : CPUParticles2D = PARTICLES.instantiate();
 	add_child(particles);
 	particles.texture = self.get(element);
 	particles.emitting = true;
@@ -167,7 +167,7 @@ func nudge(nudgerPos : Vector2) -> void:
 
 func _on_hitbox_body_entered(obj: Node2D) -> void:
 	if obj.has_method("hit"):
-		var dmg = ceil(attack);
+		var dmg : int = ceil(attack);
 		obj.hit(dmg, Vector2(sign(obj.position.x - self.position.x) * 200 , -180));
 
 		

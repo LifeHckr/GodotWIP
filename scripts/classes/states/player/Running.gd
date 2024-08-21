@@ -19,6 +19,8 @@ func _physics_update(_delta) -> void:
 		player.transition_state(player.STATES.FALLING);
 	elif Input.is_action_pressed("jump"):
 		player.transition_state(player.STATES.JUMPING);
+	elif !player.owned_deck.locked && Input.is_action_just_pressed("addCombo"):
+		player.doComboAction();
 	elif Input.is_action_just_pressed("attack"):
 		player.useCard();
 	elif Input.is_action_just_pressed("special"):

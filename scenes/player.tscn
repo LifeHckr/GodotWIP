@@ -1,4 +1,4 @@
-[gd_scene load_steps=113 format=3 uid="uid://ctcvqgc0oecb6"]
+[gd_scene load_steps=114 format=3 uid="uid://ctcvqgc0oecb6"]
 
 [ext_resource type="Script" path="res://scripts/player/newPlayer.gd" id="1_km3ob"]
 [ext_resource type="Texture2D" uid="uid://bnbwul07t2hcd" path="res://testArt/mask.png" id="2_gcwlg"]
@@ -54,6 +54,7 @@
 [ext_resource type="Texture2D" uid="uid://cr1ardn3ksum1" path="res://testArt/using/Adventurer-1.5/Individual Sprites/adventurer-items-00.png" id="51_tc6iw"]
 [ext_resource type="Texture2D" uid="uid://cye0y0y3trs30" path="res://testArt/using/Adventurer-1.5/Individual Sprites/adventurer-items-02.png" id="52_3jmp2"]
 [ext_resource type="Texture2D" uid="uid://7g6f3s1rduae" path="res://testArt/using/Adventurer-1.5/Individual Sprites/adventurer-items-01.png" id="53_8lud4"]
+[ext_resource type="Script" path="res://scenes/PlayerAttack.gd" id="54_ube5d"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2lre6"]
 atlas = ExtResource("3_s4isx")
@@ -744,22 +745,10 @@ tracks/5/keys = {
 tracks/6/type = "value"
 tracks/6/imported = false
 tracks/6/enabled = true
-tracks/6/path = NodePath("..:hit_dmg_multi")
+tracks/6/path = NodePath(".:animation")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [1.0]
-}
-tracks/7/type = "value"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath(".:animation")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
@@ -950,7 +939,7 @@ tracks/6/keys = {
 }
 tracks/7/type = "value"
 tracks/7/imported = false
-tracks/7/enabled = true
+tracks/7/enabled = false
 tracks/7/path = NodePath("..:hit_dmg_multi")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
@@ -1065,7 +1054,7 @@ tracks/7/keys = {
 }
 tracks/8/type = "value"
 tracks/8/imported = false
-tracks/8/enabled = true
+tracks/8/enabled = false
 tracks/8/path = NodePath("..:hit_dmg_multi")
 tracks/8/interp = 1
 tracks/8/loop_wrap = true
@@ -1156,7 +1145,7 @@ tracks/5/keys = {
 }
 tracks/6/type = "value"
 tracks/6/imported = false
-tracks/6/enabled = true
+tracks/6/enabled = false
 tracks/6/path = NodePath("..:hit_dmg_multi")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
@@ -1247,7 +1236,7 @@ tracks/5/keys = {
 }
 tracks/6/type = "value"
 tracks/6/imported = false
-tracks/6/enabled = true
+tracks/6/enabled = false
 tracks/6/path = NodePath("..:hit_dmg_multi")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
@@ -1338,7 +1327,7 @@ tracks/5/keys = {
 }
 tracks/6/type = "value"
 tracks/6/imported = false
-tracks/6/enabled = true
+tracks/6/enabled = false
 tracks/6/path = NodePath("..:hit_dmg_multi")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
@@ -1429,7 +1418,7 @@ tracks/5/keys = {
 }
 tracks/6/type = "value"
 tracks/6/imported = false
-tracks/6/enabled = true
+tracks/6/enabled = false
 tracks/6/path = NodePath("..:hit_dmg_multi")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
@@ -1541,6 +1530,7 @@ debug_color = Color(0, 0.6, 0.701961, 0.419608)
 collision_layer = 2
 collision_mask = 2
 monitoring = false
+script = ExtResource("54_ube5d")
 metadata/element = "Phys"
 
 [node name="colShape" type="CollisionShape2D" parent="hitbox"]

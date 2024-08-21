@@ -15,15 +15,15 @@ func _physics_update(_delta) -> void:
 	player.velocity.x = player.SPEED * player.x_direction;
 	player.move_and_slide();
 	
-	if Input.is_action_just_pressed("attack") && player.aerial_action:
+	if !player.owned_deck.locked && Input.is_action_just_pressed("addCombo"):
+		player.doComboAction();
+	elif Input.is_action_just_pressed("attack") && player.aerial_action:
 		player.aerial_action = false;
 		player.useCard();
 	elif Input.is_action_just_pressed("special") && player.aerial_action:
 		player.aerial_action = false;
 		player.transition_state(player.STATES.ROLLING);
-	elif player.is_on_floor():
-		player.transition_state(player.STATES.FALLING);
-	elif player.velocity.y >= 0 && !player.is_on_floor():
+	elif player.velocity.y >= 0:
 		player.transition_state(player.STATES.FALLING);
 	
 func _handle_input() -> void:

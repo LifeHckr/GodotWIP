@@ -17,6 +17,8 @@ func _physics_update(_delta) -> void:
 	
 	if Input.is_action_just_pressed("jump") && player.coyoteFrames > 0:
 		player.transition_state(player.STATES.JUMPING);
+	elif !player.owned_deck.locked && Input.is_action_just_pressed("addCombo"):
+		player.doComboAction();
 	elif Input.is_action_just_pressed("attack") && player.aerial_action:
 		player.aerial_action = false;
 		player.useCard();

@@ -26,7 +26,7 @@ func _physics_update(_delta) -> void:
 		
 	if !player.anims.is_playing():
 		player.checkTurn();
-		if player.input_buffer == "attack" && player.combo_anim <= player.combo_length:
+		if (player.doing_combo || player.input_buffer == "attack") && player.combo_anim <= player.combo_length:
 			player.useCard();
 			player.input_buffer = "";
 		elif player.input_buffer == "special":
@@ -47,6 +47,7 @@ func _start() -> void:
 		player.doAttack(player.aer_combos);
 
 func _end() -> void:
+	player.endCombo();
 	player.anims.stop();
 	player.input_buffer = "";
 	player.combo_anim = 1;

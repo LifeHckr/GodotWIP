@@ -39,11 +39,12 @@ var nudgeObj : Object;
 var combo_anim : int = 1;
 var invince : bool = false;
 var gravity_multi : float = 1;
+var coyoteFrames : int = 5;
 
-var coyoteFrames = 5;
-
+var doing_combo : bool = false;
+var comboing : Array[Card];
 #COMBAT================================================================================================
-var cur_deck: Array[Card] = [MagicCard.new(1), MagicCard.new(1), MagicCard.new(1), MagicCard.new(1), MagicCard.new(1), PlayerAttackCard.new(2), PlayerAttackCard.new(2), PlayerAttackCard.new(2), PlayerAttackCard.new(2), PlayerAttackCard.new(2), PlayerAttackCard.new(2)];
+var cur_deck: Array[Card] = [MagicCard.new(1), MagicCard.new(1), MagicCard.new(1), MagicCard.new(1), MagicCard.new(2), PlayerAttackCard.new(1), PlayerAttackCard.new(1), PlayerAttackCard.new(1), PlayerAttackCard.new(1), PlayerAttackCard.new(1), PlayerAttackCard.new(2)];
 var owned_deck : Deck;
 var current_card : Card = null;
 var attack : int = 1;
@@ -55,14 +56,17 @@ var knockback : int = 100;
 
 #STATS=================================================================================================
 var base_hp : float = 100;
-var base_poise : int = 7;
+var base_poise : int = 99;
 var SPEED : float = 300.0
 var ROLL_SPEED : float = 400.0
 var JUMP_VELOCITY : float = -425.0;
 var invince_time : float = .6;
-var combo_length : int = 3; # has to be >0
+var combo_length : int = 3; # has to be >0 # can only combocombo if >2
 var hp : float;
 var poise : int;
+
+var strong_unlocked : bool = true;
+var combo_unlocked : bool = true;
 
 #endregion
 
@@ -75,16 +79,16 @@ func _ready() -> void:
 	owned_deck.draw_to = Player_UI;
 	owned_deck._init_deck(cur_deck, 12);
 	
-	hitbox.body_entered.connect(_on_hitbox_body_entered.bind(hitbox.get_meta("element")));
+	hitbox.body_entered.connect(_on_hitbox_body_entered.bind());
 
 func _process(_delta) -> void:
 	
 	#Camera offsets
 	if current_state == STATES.RUNNING && !is_on_wall():
-		var tween = get_tree().create_tween();
+		var tween : Tween = get_tree().create_tween();
 		tween.tween_property(camera, "offset", Vector2(direction * 150, -30), 1);
 	else:
-		var tween = get_tree().create_tween();
+		var tween : Tween = get_tree().create_tween();
 		tween.tween_property(camera, "offset", Vector2(0, -30), 1);
 	
 	Player_UI.get_node("./hp_back_back/hp_back/hp_bar").size.x = 36 * (hp / base_hp);
@@ -103,9 +107,9 @@ func _physics_process(_delta : float) -> void:
 #region Debug
 	#print_debug(current_state);
 	if Input.is_action_just_pressed("debug1"):
-		transition_state(STATES.KNOCKBACK);
+		owned_deck._reset_cards();
 	if Input.is_action_just_pressed("debug2"):
-		doMagicShoot();
+		transition_state(STATES.KNOCKBACK);
 #endregion
 
 	states[current_state]._physics_update(_delta);
@@ -433,35 +437,44 @@ func end_state(next_state) -> void:
 
 func useCard():
 	
-	current_card = owned_deck._get_current_card();
-	
-	if current_card is PlayerAttackCard:
+	var doing_strong : bool = false;
+	if doing_combo:
+		current_card = comboing.pop_front();
+	else:
+		current_card = owned_deck._get_current_card();
+		if strong_unlocked && combo_length > 1 && Input.is_action_just_pressed("strong"): #feels scuffed
+			doing_strong = true;
+			combo_anim = combo_length;
+
+	if current_card is ReloadCard:
+		transition_state(STATES.USING);
+		
+	elif current_card is PlayerAttackCard:
 		attack = current_card.value;
 		
-		var next_state : STATES;
+		var next_state : STATES = STATES.ATTACKING;
 		var combo_to_use : Array = att_combos;
+
 		if "AERIAL" in states[current_state]:
 			next_state = STATES.AERIAL;
 			combo_to_use = aer_combos;
-		else:
-			next_state = STATES.ATTACKING;
-				
+
 		if current_card is MagicCard:
 			combo_to_use = magic_combos;
-				
-		if "ATTACKING" in states[current_state]:
 			if "AERIAL" in states[current_state]:
 				velocity.y = -250;
+				
+		if "ATTACKING" in states[current_state]:
 			doAttack(combo_to_use);
 		else:
 			transition_state(next_state);
 
-		owned_deck._use_card();
+		if doing_combo:
+			owned_deck._use_combo_card();
+		else:
+			owned_deck._use_card(doing_strong);
 		current_card = null;
-		
-	elif current_card is ReloadCard:
-		transition_state(STATES.USING);
-				
+
 #Can't directly change velo in anims, and relative position changes are wierd to implement and questionable physics wise
 func animVeloc(veloX: int, veloY: int) -> void:
 	velocity.x += direction * veloX;
@@ -496,24 +509,47 @@ func checkTurn() -> void:
 		
 func doAttack(combo_anim_names : Array[String]) -> void:
 	hit_dmg_multi = 1.0; #might cause the exploit i have in mind
-	if combo_anim >= combo_length:
-		hit_dmg_multi = 1.5;
+	if combo_anim >= combo_length || (doing_combo && combo_anim == 3):
+		hit_dmg_multi += .5;
 		anims.play(combo_anim_names[2]);
+		combo_anim = combo_length + 1; # just to make sure
 	elif combo_anim % 2 == 0:
 		anims.play(combo_anim_names[1]);
 	elif combo_anim % 2 == 1:
 		anims.play(combo_anim_names[0]);
 	combo_anim += 1;
-	
+
+func doComboAction() -> void:
+	if !combo_unlocked || combo_length < 3:
+		return;
+	if !owned_deck.locked && await owned_deck._add_cur_combo():
+		doing_combo = true;
+		owned_deck.locked = true;
+		comboing = owned_deck._get_combo_cards();
+		aerial_action = false;
+		useCard();
+
+func endCombo() -> void:
+	if doing_combo:
+		comboing.clear();
+		owned_deck._clear_combo();
+		owned_deck.locked = false;
+	doing_combo = false;
+
 func doMagicShoot():
-	var p = proj.instantiate();
+	var p : PlayerAttack = proj.instantiate();
 	owner.add_child(p);
+	
 	p.visible = true;
 	p.element = "Fire";
+	p.attack = attack;
+	p.dmg_multi = hit_dmg_multi;
+	
 	p.position.x = position.x + direction * 30;
 	p.position.y = position.y;
 	p.speed = 500 * direction;
-	p.body_entered.connect(_on_hitbox_body_entered.bind(p.element));
+	
+	p.body_entered.connect(_on_hitbox_body_entered.bind(p.element, p.attack, p.dmg_multi));
 	
 #Probably should do something different to control ui, but
 func changePortrait(anim_name : String) -> void:
@@ -527,9 +563,9 @@ func changePortrait(anim_name : String) -> void:
 func hittable() -> void:
 	invince = false;
 
-func _on_hitbox_body_entered(_obj : Node2D, _element : String = " ") -> void:
+func _on_hitbox_body_entered(_obj : Node2D, _element : String = hitbox.get_meta("element"), attack_dmg : int = attack, attack_multi : float = hit_dmg_multi) -> void:
 	if _obj.has_method("hit"):
-		var dmg = ceil(attack * hit_dmg_multi);
+		var dmg : int = ceil(attack_dmg * attack_multi);
 		_obj.hit(dmg, Vector2(sign(_obj.position.x - self.position.x) * 100 * hit_knockback_multi , -150 * hit_knockback_multi_up), _element);
 		changePortrait("yah");
 
