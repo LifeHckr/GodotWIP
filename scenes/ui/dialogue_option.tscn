@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://vl8ur3o6ghu6"]
+
+[ext_resource type="Theme" uid="uid://bhtjvid87bvkk" path="res://scenes/ui/themeButtonPlain.tres" id="1_i2agd"]
+[ext_resource type="Texture2D" uid="uid://bbnpv8h2hkskd" path="res://testArt/using/optionBoxTop.png" id="2_626ue"]
+
+[node name="Dialogue_Option" type="Button"]
+z_index = 5
+z_as_relative = false
+theme = ExtResource("1_i2agd")
+text = "Yes"
+flat = true
+alignment = 0
+text_overrun_behavior = 1
+autowrap_mode = 2
+icon_alignment = 1
+
+[node name="option_background" type="Sprite2D" parent="."]
+z_index = 1
+z_as_relative = false
+position = Vector2(49, 14)
+texture = ExtResource("2_626ue")

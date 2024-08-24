@@ -576,18 +576,18 @@ script = ExtResource("1_ar3i4")
 
 [node name="faces" type="AnimatedSprite2D" parent="."]
 z_index = 1
-position = Vector2(580, 300)
+position = Vector2(30, 25)
 sprite_frames = SubResource("SpriteFrames_c27oe")
 animation = &"yah"
 autoplay = "default_blink"
 
 [node name="hp_back_back" parent="." instance=ExtResource("2_1ym0a")]
-offset_left = 583.0
-offset_top = 346.0
-offset_right = 621.0
-offset_bottom = 350.0
+offset_left = 32.0
+offset_top = 17.0
+offset_right = 70.0
+offset_bottom = 21.0
 rotation = 3.14159
-scale = Vector2(3, 3)
+scale = Vector2(-3, 3)
 
 [node name="Card_Display_Control" type="Control" parent="."]
 layout_mode = 3
@@ -601,28 +601,52 @@ offset_right = 24.16
 offset_bottom = -0.840027
 
 [node name="Combo_Control" type="Control" parent="Card_Display_Control"]
-visible = false
 layout_mode = 3
 anchors_preset = 0
-offset_top = -295.0
-offset_right = 40.0
-offset_bottom = -255.0
+offset_left = 57.0
+offset_top = -265.0
+offset_right = 97.0
+offset_bottom = -225.0
 
 [node name="Card1" type="Sprite2D" parent="Card_Display_Control/Combo_Control"]
-position = Vector2(16, 16)
+position = Vector2(8, 16)
 texture = ExtResource("3_uu8lo")
 
 [node name="Card2" type="Sprite2D" parent="Card_Display_Control/Combo_Control"]
-position = Vector2(56, 16)
+position = Vector2(40, 16)
 texture = ExtResource("3_uu8lo")
 
 [node name="Card3" type="Sprite2D" parent="Card_Display_Control/Combo_Control"]
-position = Vector2(96, 16)
+position = Vector2(72, 16)
 texture = ExtResource("3_uu8lo")
+
+[node name="Combo_Sum" type="Label" parent="Card_Display_Control/Combo_Control"]
+unique_name_in_owner = true
+visible = false
+offset_left = 84.0
+offset_right = 95.0
+offset_bottom = 49.0
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 13
+text = "9"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Current_Card" type="Sprite2D" parent="Card_Display_Control"]
 position = Vector2(32, -1)
 texture = ExtResource("3_uu8lo")
+
+[node name="Card_Details" type="Label" parent="Card_Display_Control/Current_Card"]
+unique_name_in_owner = true
+offset_left = 5.0
+offset_top = -43.0
+offset_right = 33.0
+offset_bottom = 6.0
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 13
+text = "999"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Prev_Card" type="Sprite2D" parent="Card_Display_Control"]
 position = Vector2(0, -2)
@@ -646,18 +670,15 @@ libraries = {
 }
 autoplay = "float_current"
 
-[node name="Card_Details" type="RichTextLabel" parent="Card_Display_Control"]
+[node name="Cards_Rem" type="Label" parent="Card_Display_Control"]
+unique_name_in_owner = true
 layout_mode = 0
-offset_left = 2.0
-offset_top = 15.0
-offset_right = 30.0
-offset_bottom = 47.0
+offset_left = -1.0
+offset_top = 6.0
+offset_right = 27.0
+offset_bottom = 55.0
 theme_override_constants/outline_size = 8
-theme_override_font_sizes/normal_font_size = 12
-text = "999
-999"
-scroll_active = false
-autowrap_mode = 0
-shortcut_keys_enabled = false
-progress_bar_delay = -1
-drag_and_drop_selection_enabled = false
+theme_override_font_sizes/font_size = 13
+text = "999"
+horizontal_alignment = 1
+vertical_alignment = 1

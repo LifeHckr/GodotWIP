@@ -32,7 +32,8 @@ func _process(_delta: float) -> void:
 		_rem_cur_combo();
 		
 	if draw_to != null:
-		draw_to.card_details.text = str(_get_current_card().value) + "\n" + str(_get_remaining());
+		draw_to.card_details.text = str(_get_current_card().value);
+		draw_to.cards_rem.text = str(_get_remaining() - 1);
 
 func _init_deck(owner_cards : Array[Card], max_card : int = 5) -> void:
 
@@ -66,14 +67,19 @@ func _drawDeck(offset : int = 0) -> void:
 		card_controller.get_node("Card_Forw1").texture = cards[_position_from_cursor(1 + offset)].sprite;
 		card_controller.get_node("Card_Forw2").texture = cards[_position_from_cursor(2 + offset)].sprite;
 			
-func _drawCombo() -> void:
+func _drawCombo(updateCount : bool = true) -> void:
 	if draw_to == null:
 		return
+	var sum : int = 0;
 	for x in range(0, 3):
 		if x < cards_in_combo:
 			draw_to.combo_sprites[x].texture = combo_cards[x].sprite;
+			sum += combo_cards[x].value;
 		else:
 			draw_to.combo_sprites[x].texture = empty;
+	if updateCount:
+		draw_to.cards_sum.visible = cards_in_combo > 0;
+		draw_to.cards_sum.text = str(sum);
 #endregion
 #region Helpers
 func _get_remaining() -> int:
@@ -204,7 +210,7 @@ func _use_combo_card():
 	_use_this.combo_exhaust = false;
 	_use_this._use();
 	cards_in_combo -= 1;
-	_drawCombo();
+	_drawCombo(!cards_in_combo > 0);
 
 func _clear_combo(exhaust : bool = true):
 	while cards_in_combo > 0:

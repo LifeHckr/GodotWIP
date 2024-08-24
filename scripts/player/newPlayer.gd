@@ -15,8 +15,8 @@ class_name Player extends CharacterBody2D
 
 #region Declarations
 #STATES ==============================================================================================
-enum STATES {IDLE, RUNNING, JUMPING, FALLING, ROLLING, ATTACKING, AERIAL, KNOCKBACK, USING};
-var states : Array[State] = [PlayerIdle.new(self), PlayerRunning.new(self), PlayerJumping.new(self), PlayerFalling.new(self), PlayerRolling.new(self), PlayerAttacking.new(self), PlayerAerial.new(self), PlayerKnockback.new(self), PlayerUsing.new(self)];
+enum STATES {IDLE, RUNNING, JUMPING, FALLING, ROLLING, ATTACKING, AERIAL, KNOCKBACK, USING, DIALOGUE};
+var states : Array[State] = [PlayerIdle.new(self), PlayerRunning.new(self), PlayerJumping.new(self), PlayerFalling.new(self), PlayerRolling.new(self), PlayerAttacking.new(self), PlayerAerial.new(self), PlayerKnockback.new(self), PlayerUsing.new(self), PlayerDialogue.new(self)];
 var initial_state : STATES = STATES.IDLE;
 var current_state : STATES = initial_state;
 const aer_combos : Array[String] = ["new_aerial_1", "new_aerial_2", "new_aerial_3"];
@@ -82,6 +82,8 @@ func _ready() -> void:
 	hitbox.body_entered.connect(_on_hitbox_body_entered.bind());
 	
 	Player_UI.combo_controller.visible = combo_unlocked;
+	
+	DialogueManager.cur_player = self;
 
 func _process(_delta) -> void:
 	
@@ -204,7 +206,7 @@ func nudgeFix() -> void:
 	set_collision_mask_value(5, !ray.is_colliding());
 
 
-func hit(damage : int, dmg_knockback : Vector2) -> void:
+func _hit(damage : int, dmg_knockback : Vector2) -> void:
 	if !invince:
 		hp -= damage;
 		changePortrait("hurt");
@@ -279,9 +281,9 @@ func hittable() -> void:
 	invince = false;
 
 func _on_hitbox_body_entered(_obj : Node2D, _element : String = hitbox.get_meta("element"), attack_dmg : int = attack, attack_multi : float = hit_dmg_multi) -> void:
-	if _obj.has_method("hit"):
+	if _obj.has_method("_hit"):
 		var dmg : int = ceil(attack_dmg * attack_multi);
-		_obj.hit(dmg, Vector2(sign(_obj.position.x - self.position.x) * 100 * hit_knockback_multi , -150 * hit_knockback_multi_up), _element);
+		_obj._hit(dmg, Vector2(sign(_obj.position.x - self.position.x) * 100 * hit_knockback_multi , -150 * hit_knockback_multi_up), _element);
 		changePortrait("yah");
 
 #endregion

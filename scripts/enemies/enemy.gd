@@ -1,4 +1,4 @@
-class_name Enemy extends RigidBody2D
+class_name EnemyOld extends RigidBody2D
 
 @onready var sprite = self.get_node("sprite");
 @onready var anims = self.get_node("anims");

@@ -1,27 +1,10 @@
-class_name EnemyChar extends CharacterBody2D
-
-@onready var sprite : AnimatedSprite2D = self.get_node("sprite");
-@onready var anims : AnimationPlayer = sprite.get_node("anims");
-@onready var body : CollisionShape2D = self.get_node("body");
-@onready var hitbox : Area2D = self.get_node("hitbox");
-@onready var hp_bar : ColorRect = self.get_node("./hp_back_back/hp_back/%hp_bar");
-@onready var ground_check : RayCast2D = self.get_node("ground_checker");
+class_name BlueSlime extends Enemy
 
 @onready var PARTICLES = preload("res://scenes/hit_particles.tscn");
+@onready var DMG_NUM = preload("res://scenes/ui/damage_number.tscn");
+
 @onready var Phys = preload("res://testArt/using/particles/purple/tile190.png");
 @onready var Fire = preload("res://testArt/using/particles/red/tile030.png");
-
-
-var hp_bar_length : float;
-
-
-const SPEED : float = 100.0
-const JUMP_VELOCITY : float = -400.0
-var attack : int = 5;
-const base_hp : float = 7;
-var hp : float;
-var poise : int;
-const base_poise : int = 4;
 
 enum STATES {IDLE, WALKING, ATTACKING, KNOCKBACK, PATROLLING, CHASING, DEATH};
 var current_state : STATES = STATES.IDLE
@@ -30,11 +13,18 @@ var current_target : Node2D;
 var vision_range : float = 250.0;
 var direction : float = -1.0;
 
-var gravity : float = 980;
-var friction : int = 12;
-
 
 func _ready() -> void:
+	
+	SPEED = 100.0;
+	JUMP_VELOCITY = -400.0
+	attack = 5;
+	base_hp = 7;
+	base_poise = 4;
+	
+	gravity = 980;
+	friction = 12;
+	
 	poise = base_poise;
 	hp = base_hp;
 	hp_bar_length = hp_bar.size.x;
@@ -73,7 +63,7 @@ func _physics_process(_delta) -> void:
 			if not checkInRange(current_target, 1.5):
 				current_target = null;
 				transition_state(STATES.IDLE, null);
-			elif abs(position.distance_to(current_target.position)) < 100:
+			elif checkInRange(current_target, 0.3):
 				transition_state(STATES.ATTACKING, null);
 				
 		STATES.ATTACKING:
@@ -120,28 +110,35 @@ func transition_state(next_state : STATES, data) -> bool:
 	current_state = next_state;
 	return true;
 
-func hit(damage : int, knockback : Vector2, element : String) -> void:
+func _hit(damage : int, knockback : Vector2, element : String) -> void:
 	var particles : CPUParticles2D = PARTICLES.instantiate();
 	add_child(particles);
+	
+	var dmg_num = DMG_NUM.instantiate();
+	dmg_num.position = position;
+	dmg_num.amount = damage;
+	dmg_num.speed = Vector2(sign(knockback.x) , -1);
+	get_tree().get_root().add_child(dmg_num);
+	
 	particles.texture = self.get(element);
 	particles.emitting = true;
 	anims.play("interrupt");
 	
-	hp -= damage;
-	updateHP();
+	_updateHP(damage);
 	if hp <= 0:
-		hp = 0;
-		transition_state(STATES.DEATH, null);
+		_death();
 		return;
 	poise -= damage;
 	if poise <= 0:
 		transition_state(STATES.KNOCKBACK, knockback)
 		poise = base_poise;
-
-func updateHP() -> void:
-	hp_bar.size.x = hp_bar_length * (hp / base_hp); 
+	
+func _death() -> void:
+	hp = 0;
+	transition_state(STATES.DEATH, null);
 
 #bias visual range in the direction the enemy is facing
+#checks between vision range in the direction the enemy is facing and 1/2 vision range behind
 func checkInRange(target : Node2D, multi : float) -> bool:
 	var test : bool = abs(target.position.y - position.y) < 80 * multi && target.position.x - position.x <= vision_range * multi * (1.0/4.0 * direction + (3.0/4.0))   && target.position.x - position.x >= vision_range * multi * (1.0/4.0 * direction + (-3.0/4.0));
 	return test;
@@ -167,9 +164,9 @@ func nudge(nudgerPos : Vector2) -> void:
 	move_and_slide();
 
 func _on_hitbox_body_entered(obj: Node2D) -> void:
-	if obj.has_method("hit"):
+	if obj.has_method("_hit"):
 		var dmg : int = ceil(attack);
-		obj.hit(dmg, Vector2(sign(obj.position.x - self.position.x) * 200 , -180));
+		obj._hit(dmg, Vector2(sign(obj.position.x - self.position.x) * 200 , -180));
 
 		
 #func _on_body_shape_entered(_body_rid, _body, _body_shape_index, _local_shape_index):
