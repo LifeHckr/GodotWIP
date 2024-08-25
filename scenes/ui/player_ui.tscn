@@ -623,6 +623,7 @@ texture = ExtResource("3_uu8lo")
 [node name="Combo_Sum" type="Label" parent="Card_Display_Control/Combo_Control"]
 unique_name_in_owner = true
 visible = false
+layout_mode = 0
 offset_left = 84.0
 offset_right = 95.0
 offset_bottom = 49.0
@@ -636,33 +637,91 @@ vertical_alignment = 1
 position = Vector2(32, -1)
 texture = ExtResource("3_uu8lo")
 
-[node name="Card_Details" type="Label" parent="Card_Display_Control/Current_Card"]
-unique_name_in_owner = true
-offset_left = 5.0
-offset_top = -43.0
-offset_right = 33.0
-offset_bottom = 6.0
-theme_override_constants/outline_size = 8
-theme_override_font_sizes/font_size = 13
-text = "999"
-horizontal_alignment = 1
-vertical_alignment = 1
+[node name="val" type="Label" parent="Card_Display_Control/Current_Card"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.0
+offset_top = -15.0
+offset_right = 13.0
+offset_bottom = -15.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 10
+text = "1"
 
 [node name="Prev_Card" type="Sprite2D" parent="Card_Display_Control"]
 position = Vector2(0, -2)
 texture = ExtResource("4_msk2t")
 
+[node name="val" type="Label" parent="Card_Display_Control/Prev_Card"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.0
+offset_top = -16.0
+offset_right = -2.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 10
+text = "1"
+
 [node name="Card_Forw1" type="Sprite2D" parent="Card_Display_Control"]
 position = Vector2(49, 21)
 texture = ExtResource("4_msk2t")
+
+[node name="val" type="Label" parent="Card_Display_Control/Card_Forw1"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.0
+offset_top = -16.0
+offset_right = -2.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 10
+text = "1"
 
 [node name="Card_Forw2" type="Sprite2D" parent="Card_Display_Control"]
 position = Vector2(33, 50)
 texture = ExtResource("4_msk2t")
 
+[node name="val" type="Label" parent="Card_Display_Control/Card_Forw2"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.0
+offset_top = -16.0
+offset_right = -2.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 10
+text = "1"
+
 [node name="Card_Back2" type="Sprite2D" parent="Card_Display_Control"]
 position = Vector2(-19, 25)
 texture = ExtResource("4_msk2t")
+
+[node name="val" type="Label" parent="Card_Display_Control/Card_Back2"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2.0
+offset_top = -16.0
+offset_right = -2.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 10
+text = "1"
 
 [node name="anims" type="AnimationPlayer" parent="Card_Display_Control"]
 libraries = {

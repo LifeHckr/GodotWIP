@@ -10,7 +10,7 @@ var card_button;
 var player_card_inv : Inventory;
 var player_deck : Array[Card];
 
-var card_inv_buttons : Array[Node] = [];
+var card_inv_buttons : Array[BaseButton] = [];
 var deck_inv_buttons : Array[BaseButton] = [];
 var cur_slot : int = 0;
 var cur_val : int = 0;
@@ -21,10 +21,11 @@ var active_panel : String = ""; #card vals deck
 
 signal finished;
 
-@onready var cards_inv_grid = get_node("%Cards_Grid");
-@onready var values_grid = get_node("%Values_Grid");
-@onready var deck_grid = get_node("%Deck_Grid");
-
+@onready var cards_inv_grid : GridContainer = get_node("%Cards_Grid");
+@onready var values_grid : GridContainer = get_node("%Values_Grid");
+@onready var deck_grid : GridContainer = get_node("%Deck_Grid");
+@onready var AddUI : TextureRect = get_node("%LAdd");
+@onready var RemUI : TextureRect = get_node("%RRem");
 
 func loadStuff() -> void:
 	card_inv_group = load("res://scenes/ui/card_inv_BGroup.tres");
@@ -33,14 +34,20 @@ func loadStuff() -> void:
 	deck_card_group = load("res://scenes/ui/deck_button_group.tres");
 	has_loaded = true;
 
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
-
 func _process(_delta: float) -> void:
-	if active && Input.is_action_just_pressed("ui_cancel"):
-		if active_panel == "card":
+	if !active:
+		return;
+	var focused : Node = get_viewport().gui_get_focus_owner();
+	if focused in deck_inv_buttons && deck_inv_buttons.find(focused) < player_deck.size():
+		$%Cur_Card.text = "[center]Value: %d[/center]" % player_deck[deck_inv_buttons.find(focused)].base_value;
+	elif focused in card_inv_buttons: 
+		cur_slot = card_inv_buttons.find(focused);
+		draw_values();
+	else:
+		$%Cur_Card.text = "";
+	
+	if Input.is_action_just_pressed("ui_cancel"):
+		if active_panel == "card" && player_deck.size() > 0:
 			endCards();
 			endActive();
 		elif active_panel == "vals":
@@ -48,14 +55,46 @@ func _process(_delta: float) -> void:
 			startCards();
 		elif active_panel == "deck":
 			endDeck();
-			startVals();
+			if state == "add":
+				startVals();
+			elif state == "rem":
+				endActive();
+	elif Input.is_action_just_pressed("rotate_left"):
+		if state == "rem":
+			transitionState();
+	elif Input.is_action_just_pressed("rotate_right"):
+		if state == "add":
+			transitionState();
 
+func transitionState() -> void:
+	#to rem
+	if state == "add" && player_deck.size() > 0:
+		AddUI.self_modulate = Color(1, 1, 1);
+		RemUI.self_modulate = Color(1, 1, 1, 0);
+		if active_panel == "deck":
+			endDeck();
+			startVals();
+		if active_panel == "vals":
+			endVals();
+			startCards();
+		endCards();
+		state = "rem";
+		startDeck();
+	#to add
+	elif state == "rem":
+		AddUI.self_modulate = Color(1, 1, 1, 0);
+		RemUI.self_modulate = Color(1, 1, 1);
+		endDeck();
+		state = "add";
+		startCards();
 
 func startActive() -> void:
 	if !has_loaded:
 		loadStuff();
 	active = true;
 	state = "add";
+	AddUI.self_modulate = Color(1, 1, 1, 0);
+	RemUI.self_modulate = Color(1, 1, 1);
 	cur_slot = 0;
 	cur_val = 0;
 	player_card_inv = Global.player[0].inventory;
@@ -70,9 +109,8 @@ func startCards() -> void:
 	var pressed : BaseButton = card_inv_group.get_pressed_button();
 	if pressed != null:
 		pressed.button_pressed = false;
-	card_inv_buttons = cards_inv_grid.get_children();
 	for button in card_inv_buttons:
-		button.focus_mode = 2;
+		button.focus_mode = Control.FOCUS_ALL;
 		button.disabled = false;
 	card_inv_buttons[cur_slot].grab_focus();
 
@@ -104,14 +142,13 @@ func endVals() -> void:
 func startDeck() -> void:
 	active_panel = "deck";
 	draw_deck();
-	deck_inv_buttons = deck_card_group.get_buttons();
 	for button in deck_inv_buttons:
 		button.focus_mode = Control.FOCUS_ALL;
 		button.disabled = false;
 	var pressed : BaseButton = deck_card_group.get_pressed_button();
 	if pressed != null:
 		pressed.button_pressed = false;
-	deck_grid.get_child(0).grab_focus();
+	deck_inv_buttons[0].grab_focus();
 	
 func endDeck() -> void:
 	var deck_buttons : Array[Node] = deck_grid.get_children();
@@ -124,7 +161,7 @@ func endActive():
 	cur_slot = 0;
 	active_panel = "";
 	for button in card_inv_buttons:
-		button.focus_mode = 0;
+		button.focus_mode = Control.FOCUS_NONE;
 		button.disabled = true;
 	finished.emit();
 
@@ -133,7 +170,8 @@ func endActive():
 func draw_card_inv() -> void:
 	if card_inv_buttons.size() != player_card_inv.card_slots.size():
 		for x in card_inv_buttons:
-			x.free();
+			x.queue_free();
+		card_inv_buttons.clear();
 		for x in range(0, player_card_inv.card_slots.size()):
 			draw_card_inv_button(x);
 	
@@ -143,6 +181,7 @@ func draw_card_inv_button( x : int) -> void:
 	button.icon = Global.cards_changelater[player_card_inv._get_card_slot(x).item].sprite;
 	cards_inv_grid.add_child(button);
 	button.button_group = card_inv_group;
+	card_inv_buttons.push_back(button);
 	
 func draw_card_deck_button( x : int) -> void:
 	var button : Button = card_button.instantiate();
@@ -151,6 +190,7 @@ func draw_card_deck_button( x : int) -> void:
 		button.icon = player_deck[x].sprite;
 	deck_grid.add_child(button);
 	button.button_group = deck_card_group;
+	deck_inv_buttons.push_back(button);
 
 func draw_values() -> void:
 	var buttons : Array[Node] = values_grid.get_children();
@@ -159,13 +199,14 @@ func draw_values() -> void:
 		buttons[x].text = "x%02d" % amount;
 
 func draw_deck() -> void:
-	deck_inv_buttons = deck_card_group.get_buttons();
 	for button in deck_inv_buttons:
 		button.queue_free();
+	deck_inv_buttons.clear()
 	for x in range(0, player_deck.size()):
 		draw_card_deck_button(x);
-	if player_deck.size() < Global.player[0].max_deck_size:
+	if state == "add" && player_deck.size() < Global.player[0].max_deck_size:
 		draw_card_deck_button(-1);
+	$%Deck_Size.text = "[center] %d/%d cards  [/center]" % [player_deck.size(), Global.player[0].max_deck_size];
 
 #region Signals
 func inv_card_toggled(_toggled_on : bool, _slot : int):
@@ -182,6 +223,24 @@ func val_but_toggled(_toggled_on : bool, _val : int):
 	
 func deck_but_toggled(_toggled_on : bool, _val : int):
 	if _toggled_on:
+		if state == "add":
+			addCard(_val);
+		elif state == "rem":
+			remCard(_val);
+		Global.player[0].owned_deck._init_deck(player_deck, Global.player[0].max_deck_size);
+		var pressed : BaseButton = deck_card_group.get_pressed_button();
+		if pressed != null:
+			pressed.button_pressed = false;
+			
+func remCard(_val : int) -> void:
+	var card : Card = player_deck.pop_at(_val);
+	player_card_inv._add_card(card.id, card.base_value, 1);
+	if player_deck.size() > 0:
+		startDeck();
+	else:
+		transitionState();
+			
+func addCard(_val : int) -> void:
 		if _val == -1:
 			player_deck.push_back(Global.cards_changelater[player_card_inv._get_card_slot(cur_slot).item]._get_dupl(cur_val));
 		else:
@@ -189,9 +248,7 @@ func deck_but_toggled(_toggled_on : bool, _val : int):
 			player_deck.insert(_val, Global.cards_changelater[player_card_inv._get_card_slot(cur_slot).item]._get_dupl(cur_val));
 			player_card_inv._add_card(removed_card.id, removed_card.base_value, 1);
 		player_card_inv._get_card_slot(cur_slot).decrease_amount(cur_val);
-		var pressed : BaseButton = deck_card_group.get_pressed_button();
-		if pressed != null:
-			pressed.button_pressed = false;
+
 		if player_card_inv._get_card_slot(cur_slot).get_amount(cur_val) <= 0:
 			endDeck();
 			draw_deck();
@@ -199,5 +256,4 @@ func deck_but_toggled(_toggled_on : bool, _val : int):
 		else:
 			draw_values();
 			startDeck();
-		Global.player[0].owned_deck._init_deck(player_deck, Global.player[0].max_deck_size);
 #endregion

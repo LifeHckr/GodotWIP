@@ -1,11 +1,13 @@
-[gd_scene load_steps=18 format=3 uid="uid://csgc5diuy00fj"]
+[gd_scene load_steps=20 format=3 uid="uid://csgc5diuy00fj"]
 
 [ext_resource type="Script" path="res://scenes/ui/menu_layer.gd" id="1_18u61"]
 [ext_resource type="Texture2D" uid="uid://d1kwd0k0o6gnf" path="res://testArt/using/UIBox.png" id="1_hj81g"]
 [ext_resource type="Theme" uid="uid://b83b80puvw0j" path="res://scenes/ui/menuButtonTheme.tres" id="3_05arv"]
 [ext_resource type="Script" path="res://scenes/ui/DeckMenu.gd" id="3_m4sfh"]
 [ext_resource type="Texture2D" uid="uid://dmi2xddbj3cpw" path="res://testArt/using/cursor.png" id="4_j80cs"]
+[ext_resource type="Texture2D" uid="uid://ceq86tqhwkihp" path="res://testArt/using/addCard.png" id="4_kgyxp"]
 [ext_resource type="ButtonGroup" uid="uid://cl4im3a1jls1u" path="res://scenes/ui/menu_opts_group.tres" id="5_3gg4c"]
+[ext_resource type="Texture2D" uid="uid://c7rkvyhm8t4lp" path="res://testArt/using/remCard.png" id="5_jhpgv"]
 [ext_resource type="ButtonGroup" uid="uid://dnnq1nqdlw3s5" path="res://scenes/ui/value_button_group.tres" id="5_u0ca2"]
 [ext_resource type="Texture2D" uid="uid://d4lhrm56wlvn3" path="res://testArt/using/1Icon.png" id="6_2a4tg"]
 [ext_resource type="Texture2D" uid="uid://gr4hj6mbkjos" path="res://testArt/using/2Icon.png" id="7_ta7p1"]
@@ -19,6 +21,7 @@
 [ext_resource type="Texture2D" uid="uid://cfkmr5nj7au7j" path="res://testArt/using/0Icon.png" id="15_sebek"]
 
 [node name="Menu_Layer" type="CanvasLayer"]
+process_mode = 3
 script = ExtResource("1_18u61")
 
 [node name="Menu_Cont" type="MarginContainer" parent="."]
@@ -112,6 +115,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.5
+theme_override_constants/margin_top = 5
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Top_Panel/HBox2/Description"]
 layout_mode = 2
@@ -121,14 +125,19 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="LAdd" type="TextureRect" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Top_Panel/HBox2/Description/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+self_modulate = Color(0.389, 0.389, 0.389, 0)
 layout_mode = 2
 size_flags_horizontal = 3
+texture = ExtResource("4_kgyxp")
 
 [node name="RRem" type="TextureRect" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Top_Panel/HBox2/Description/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
+texture = ExtResource("5_jhpgv")
 
 [node name="Cur_Card" type="RichTextLabel" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Top_Panel/HBox2/Description/VBoxContainer"]
+unique_name_in_owner = true
 z_index = 1
 layout_direction = 2
 layout_mode = 2
@@ -136,12 +145,15 @@ size_flags_vertical = 3
 mouse_filter = 2
 theme_override_colors/default_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/normal_font_size = 16
-text = "Value:"
+bbcode_enabled = true
+text = "[center] Value:  [/center]"
 scroll_active = false
 shortcut_keys_enabled = false
+drag_and_drop_selection_enabled = false
 visible_characters_behavior = 1
 
 [node name="Deck_Size" type="RichTextLabel" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Top_Panel/HBox2/Description/VBoxContainer"]
+unique_name_in_owner = true
 z_index = 1
 layout_direction = 2
 layout_mode = 2
@@ -149,7 +161,8 @@ size_flags_vertical = 3
 mouse_filter = 2
 theme_override_colors/default_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/normal_font_size = 16
-text = "x/19 Cards"
+bbcode_enabled = true
+text = "[center] x/19 cards  [/center]"
 scroll_active = false
 shortcut_keys_enabled = false
 visible_characters_behavior = 1
@@ -382,6 +395,7 @@ flat = true
 clip_text = true
 
 [node name="Cursor" type="Sprite2D" parent="."]
+unique_name_in_owner = true
 texture = ExtResource("4_j80cs")
 
 [connection signal="finished" from="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel" to="." method="active_finished"]

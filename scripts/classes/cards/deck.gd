@@ -32,7 +32,6 @@ func _process(_delta: float) -> void:
 		_rem_cur_combo();
 		
 	if draw_to != null:
-		draw_to.card_details.text = str(_get_current_card().value);
 		draw_to.cards_rem.text = str(_get_remaining() - 1);
 
 func _init_deck(owner_cards : Array[Card], max_card : int = 5) -> void:
@@ -64,9 +63,13 @@ func _drawDeck(offset : int = 0) -> void:
 	var card_controller : Control = draw_to.card_controller;
 	if card_controller != null:
 		card_controller.get_node("Current_Card").texture = cards[cursor + offset].sprite;
+		card_controller.get_node("Current_Card").get_node("val").text = str(cards[cursor + offset].value);
 		card_controller.get_node("Prev_Card").texture = cards[_position_from_cursor(-1 + offset)].sprite;
+		card_controller.get_node("Prev_Card").get_node("val").text = str(cards[_position_from_cursor(-1 + offset)].value);
 		card_controller.get_node("Card_Forw1").texture = cards[_position_from_cursor(1 + offset)].sprite;
+		card_controller.get_node("Card_Forw1").get_node("val").text = str(cards[_position_from_cursor(1 + offset)].value);
 		card_controller.get_node("Card_Forw2").texture = cards[_position_from_cursor(2 + offset)].sprite;
+		card_controller.get_node("Card_Forw2").get_node("val").text = str(cards[_position_from_cursor(2 + offset)].value);
 			
 func _drawCombo(updateCount : bool = true) -> void:
 	if draw_to == null:

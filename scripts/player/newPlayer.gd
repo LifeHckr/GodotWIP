@@ -45,7 +45,7 @@ var doing_combo : bool = false;
 var comboing : Array[Card];
 #COMBAT================================================================================================
 var max_deck_size : int = 12;
-var cur_deck: Array[Card] = [MagicCard.new(1), MagicCard.new(2), PlayerAttackCard.new(1), PlayerAttackCard.new(2)];
+var cur_deck: Array[Card] = [MagicCard.new(1), MagicCard.new(3), PlayerAttackCard.new(1), PlayerAttackCard.new(2)];
 var inventory :Inventory = Inventory.new();
 var owned_deck : Deck;
 var current_card : Card = null;
@@ -60,7 +60,7 @@ var knockback : int = 100;
 var base_hp : float = 100;
 var base_poise : int = 99;
 var SPEED : float = 300.0
-var ROLL_SPEED : float = 400.0
+var ROLL_SPEED : float = 400.0;
 var JUMP_VELOCITY : float = -425.0;
 var invince_time : float = .6;
 var combo_length : int = 3; # has to be >0 # can only combocombo if >2
@@ -87,7 +87,7 @@ func _ready() -> void:
 	
 	DialogueManager.cur_player = self;
 	
-	inventory._add_card(1, 1, 5);
+	inventory._add_card(1, 9, 99);
 	inventory._add_card(2, 0, 0);
 
 func _process(_delta) -> void:
@@ -117,9 +117,9 @@ func _physics_process(_delta : float) -> void:
 #region Debug
 	#print_debug(current_state);
 	if Input.is_action_just_pressed("debug1"):
-		owned_deck._reset_cards();
+		Global.save_data();
 	if Input.is_action_just_pressed("debug2"):
-		transition_state(STATES.KNOCKBACK);
+		Global.load_data();
 #endregion
 
 	states[current_state]._physics_update(_delta);

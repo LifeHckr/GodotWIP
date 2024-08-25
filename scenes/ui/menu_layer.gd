@@ -11,7 +11,8 @@ signal menu_closed;
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	
+	if !visible:
+		return;
 	cards_panel.visible = false;
 	visible = false;
 	
@@ -32,15 +33,24 @@ func _process(_delta: float) -> void:
 	
 	if active_menu != null && active_menu.has_method("update"):
 		active_menu.update();
+		
+	var focused : Node = get_viewport().gui_get_focus_owner();
+	if focused != null:
+		$%Cursor.position.y = focused.global_position.y + focused.get_global_rect().size.y/2;
+		$%Cursor.position.x = focused.global_position.x - 10;
 	
 func openMenu():
 	self.visible = true;
-	menu_opened.emit();
+	#menu_opened.emit();
+	Global.player[0].Player_UI.visible = false;
+	get_tree().paused = true;
 	beginActive();
 	
 func closeMenu():
 	self.visible = false;
-	menu_closed.emit();
+	get_tree().paused = false;
+	Global.player[0].Player_UI.visible = true;
+	#menu_closed.emit();
 	endActive();
 	active_menu = null;
 
