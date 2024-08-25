@@ -19,6 +19,7 @@ func _handle_input() -> void:
 	pass
 	
 func _start() -> void:
+	player.Player_UI.visible = false;
 	player.anims.stop();
 	player.nudging = false;
 	player.ray.enabled = false;
@@ -26,6 +27,7 @@ func _start() -> void:
 	player.sprite.play("idle");
 
 func _end() -> void:
+	player.Player_UI.visible = true;
 	player.aerial_action = true;
 	player.ray.enabled = true;
 	player.invince = false;

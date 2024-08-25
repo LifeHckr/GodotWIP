@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://bbyawkla8hvm7"]
+
+[ext_resource type="Theme" uid="uid://b83b80puvw0j" path="res://scenes/ui/menuButtonTheme.tres" id="1_b032s"]
+[ext_resource type="Texture2D" uid="uid://drpsqpsbd5x0s" path="res://testArt/using/cardEmpty.png" id="2_ysljw"]
+
+[node name="Card_In_Decl" type="Button"]
+size_flags_horizontal = 6
+size_flags_vertical = 4
+focus_mode = 0
+theme = ExtResource("1_b032s")
+disabled = true
+toggle_mode = true
+icon = ExtResource("2_ysljw")

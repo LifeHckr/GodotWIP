@@ -1,13 +1,15 @@
 class_name PlayerAttackCard extends Card
 
-var base_val : int;
+var id : int = 1;
 
-func _init(v : int = 0):
+func _init(v : int):
 	super(v);
-	base_val = v;
 	sprite = preload("res://testArt/using/cardAttack.png");
 	
 func _reset() -> void:
+	super();
 	exhaust = false;
 	combo_exhaust = false;
-	value = base_val;
+
+func _get_dupl(x : int) -> PlayerAttackCard:
+	return PlayerAttackCard.new(x);

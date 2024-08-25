@@ -23,7 +23,7 @@ func _physics_process(_delta):
 			if !sprite.is_playing():
 				transition_state(STATES.IDLE, null);
 		STATES.IDLE:
-			if Global.player.position.x == 0:
+			if Global.player[0].position.x == 0:
 				current_target = Global.player;
 
 

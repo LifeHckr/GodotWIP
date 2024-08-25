@@ -6,6 +6,7 @@
 [node name="Dialogue_Option" type="Button"]
 z_index = 5
 z_as_relative = false
+focus_mode = 0
 theme = ExtResource("1_i2agd")
 text = "Yes"
 flat = true

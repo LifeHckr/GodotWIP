@@ -1,0 +1,6 @@
+[gd_resource type="ButtonGroup" format=3 uid="uid://dorfgtl7noylt"]
+
+[resource]
+resource_local_to_scene = false
+resource_name = "Cards in Inv"
+allow_unpress = true

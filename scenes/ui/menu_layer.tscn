@@ -1,0 +1,399 @@
+[gd_scene load_steps=18 format=3 uid="uid://csgc5diuy00fj"]
+
+[ext_resource type="Script" path="res://scenes/ui/menu_layer.gd" id="1_18u61"]
+[ext_resource type="Texture2D" uid="uid://d1kwd0k0o6gnf" path="res://testArt/using/UIBox.png" id="1_hj81g"]
+[ext_resource type="Theme" uid="uid://b83b80puvw0j" path="res://scenes/ui/menuButtonTheme.tres" id="3_05arv"]
+[ext_resource type="Script" path="res://scenes/ui/DeckMenu.gd" id="3_m4sfh"]
+[ext_resource type="Texture2D" uid="uid://dmi2xddbj3cpw" path="res://testArt/using/cursor.png" id="4_j80cs"]
+[ext_resource type="ButtonGroup" uid="uid://cl4im3a1jls1u" path="res://scenes/ui/menu_opts_group.tres" id="5_3gg4c"]
+[ext_resource type="ButtonGroup" uid="uid://dnnq1nqdlw3s5" path="res://scenes/ui/value_button_group.tres" id="5_u0ca2"]
+[ext_resource type="Texture2D" uid="uid://d4lhrm56wlvn3" path="res://testArt/using/1Icon.png" id="6_2a4tg"]
+[ext_resource type="Texture2D" uid="uid://gr4hj6mbkjos" path="res://testArt/using/2Icon.png" id="7_ta7p1"]
+[ext_resource type="Texture2D" uid="uid://dqv4bk17xg265" path="res://testArt/using/3Icon.png" id="8_bev7x"]
+[ext_resource type="Texture2D" uid="uid://dgt8g31uubc7j" path="res://testArt/using/4Icon.png" id="9_7wrb7"]
+[ext_resource type="Texture2D" uid="uid://qfkoilor8h2" path="res://testArt/using/5Icon.png" id="10_efvrr"]
+[ext_resource type="Texture2D" uid="uid://cwh3yu5wf7ubu" path="res://testArt/using/6Icon.png" id="11_e82ro"]
+[ext_resource type="Texture2D" uid="uid://cmqtt3lvp3n3e" path="res://testArt/using/7Icon.png" id="12_36v8x"]
+[ext_resource type="Texture2D" uid="uid://cwb8wnw34fbey" path="res://testArt/using/8Icon.png" id="13_5pohw"]
+[ext_resource type="Texture2D" uid="uid://d15kofjbbjaso" path="res://testArt/using/9Icon.png" id="14_5ohkq"]
+[ext_resource type="Texture2D" uid="uid://cfkmr5nj7au7j" path="res://testArt/using/0Icon.png" id="15_sebek"]
+
+[node name="Menu_Layer" type="CanvasLayer"]
+script = ExtResource("1_18u61")
+
+[node name="Menu_Cont" type="MarginContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 10
+
+[node name="Menu_HBox" type="HBoxContainer" parent="Menu_Cont"]
+layout_mode = 2
+
+[node name="Big_Panel" type="NinePatchRect" parent="Menu_Cont/Menu_HBox"]
+self_modulate = Color(1, 1, 1, 0.682353)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 100.0
+texture = ExtResource("1_hj81g")
+patch_margin_left = 22
+patch_margin_top = 22
+patch_margin_right = 22
+patch_margin_bottom = 22
+
+[node name="Cards_Panel" type="MarginContainer" parent="Menu_Cont/Menu_HBox/Big_Panel"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+script = ExtResource("3_m4sfh")
+
+[node name="VBox" type="VBoxContainer" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel"]
+layout_mode = 2
+
+[node name="Top_Panel" type="NinePatchRect" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox"]
+self_modulate = Color(1, 1, 1, 0.682353)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource("1_hj81g")
+patch_margin_left = 22
+patch_margin_top = 22
+patch_margin_right = 22
+patch_margin_bottom = 22
+
+[node name="HBox2" type="HBoxContainer" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Top_Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+
+[node name="Deck" type="MarginContainer" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Top_Panel/HBox2"]
+layout_direction = 1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Top_Panel/HBox2/Deck"]
+layout_mode = 2
+follow_focus = true
+
+[node name="Deck_Grid" type="GridContainer" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Top_Panel/HBox2/Deck/ScrollContainer"]
+unique_name_in_owner = true
+layout_direction = 2
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 1
+columns = 8
+
+[node name="Description" type="MarginContainer" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Top_Panel/HBox2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Top_Panel/HBox2/Description"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Top_Panel/HBox2/Description/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="LAdd" type="TextureRect" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Top_Panel/HBox2/Description/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RRem" type="TextureRect" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Top_Panel/HBox2/Description/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Cur_Card" type="RichTextLabel" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Top_Panel/HBox2/Description/VBoxContainer"]
+z_index = 1
+layout_direction = 2
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 16
+text = "Value:"
+scroll_active = false
+shortcut_keys_enabled = false
+visible_characters_behavior = 1
+
+[node name="Deck_Size" type="RichTextLabel" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Top_Panel/HBox2/Description/VBoxContainer"]
+z_index = 1
+layout_direction = 2
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 16
+text = "x/19 Cards"
+scroll_active = false
+shortcut_keys_enabled = false
+visible_characters_behavior = 1
+
+[node name="Big_Panel" type="NinePatchRect" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox"]
+self_modulate = Color(1, 1, 1, 0.682353)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource("1_hj81g")
+patch_margin_left = 22
+patch_margin_top = 22
+patch_margin_right = 22
+patch_margin_bottom = 22
+
+[node name="HBox1" type="HBoxContainer" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+
+[node name="Cards" type="MarginContainer" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel/HBox1"]
+layout_direction = 1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel/HBox1/Cards"]
+layout_mode = 2
+follow_focus = true
+
+[node name="Cards_Grid" type="GridContainer" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel/HBox1/Cards/ScrollContainer"]
+unique_name_in_owner = true
+layout_direction = 2
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 1
+columns = 8
+
+[node name="Amounts" type="MarginContainer" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel/HBox1"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="Values_Grid" type="GridContainer" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel/HBox1/Amounts"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+columns = 3
+
+[node name="0Button" type="Button" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel/HBox1/Amounts/Values_Grid"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("3_05arv")
+disabled = true
+toggle_mode = true
+button_group = ExtResource("5_u0ca2")
+text = "x00"
+icon = ExtResource("15_sebek")
+
+[node name="1Button" type="Button" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel/HBox1/Amounts/Values_Grid"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("3_05arv")
+disabled = true
+toggle_mode = true
+button_group = ExtResource("5_u0ca2")
+text = "x00"
+icon = ExtResource("6_2a4tg")
+
+[node name="2Button" type="Button" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel/HBox1/Amounts/Values_Grid"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("3_05arv")
+disabled = true
+toggle_mode = true
+button_group = ExtResource("5_u0ca2")
+text = "x00"
+icon = ExtResource("7_ta7p1")
+
+[node name="3Button" type="Button" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel/HBox1/Amounts/Values_Grid"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("3_05arv")
+disabled = true
+toggle_mode = true
+button_group = ExtResource("5_u0ca2")
+text = "x00"
+icon = ExtResource("8_bev7x")
+
+[node name="4Button" type="Button" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel/HBox1/Amounts/Values_Grid"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("3_05arv")
+disabled = true
+toggle_mode = true
+button_group = ExtResource("5_u0ca2")
+text = "x00"
+icon = ExtResource("9_7wrb7")
+
+[node name="5Button" type="Button" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel/HBox1/Amounts/Values_Grid"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("3_05arv")
+disabled = true
+toggle_mode = true
+button_group = ExtResource("5_u0ca2")
+text = "x00"
+icon = ExtResource("10_efvrr")
+
+[node name="6Button" type="Button" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel/HBox1/Amounts/Values_Grid"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("3_05arv")
+disabled = true
+toggle_mode = true
+button_group = ExtResource("5_u0ca2")
+text = "x00"
+icon = ExtResource("11_e82ro")
+
+[node name="7Button" type="Button" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel/HBox1/Amounts/Values_Grid"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("3_05arv")
+disabled = true
+toggle_mode = true
+button_group = ExtResource("5_u0ca2")
+text = "x00"
+icon = ExtResource("12_36v8x")
+
+[node name="8Button" type="Button" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel/HBox1/Amounts/Values_Grid"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("3_05arv")
+disabled = true
+toggle_mode = true
+button_group = ExtResource("5_u0ca2")
+text = "x00"
+icon = ExtResource("13_5pohw")
+flat = true
+
+[node name="9Button" type="Button" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel/HBox1/Amounts/Values_Grid"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("3_05arv")
+disabled = true
+toggle_mode = true
+button_group = ExtResource("5_u0ca2")
+text = "x00"
+icon = ExtResource("14_5ohkq")
+
+[node name="Option_List" type="NinePatchRect" parent="Menu_Cont/Menu_HBox"]
+self_modulate = Color(1, 1, 1, 0.682353)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 25.0
+texture = ExtResource("1_hj81g")
+patch_margin_left = 22
+patch_margin_top = 22
+patch_margin_right = 22
+patch_margin_bottom = 22
+
+[node name="Option_Panel" type="MarginContainer" parent="Menu_Cont/Menu_HBox/Option_List"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="Menu_Opts" type="VBoxContainer" parent="Menu_Cont/Menu_HBox/Option_List/Option_Panel"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Inventory" type="Button" parent="Menu_Cont/Menu_HBox/Option_List/Option_Panel/Menu_Opts"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("3_05arv")
+toggle_mode = true
+button_group = ExtResource("5_3gg4c")
+text = "Inventory"
+flat = true
+clip_text = true
+
+[node name="Cards" type="Button" parent="Menu_Cont/Menu_HBox/Option_List/Option_Panel/Menu_Opts"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("3_05arv")
+toggle_mode = true
+button_group = ExtResource("5_3gg4c")
+text = "Cards"
+flat = true
+clip_text = true
+
+[node name="Save" type="Button" parent="Menu_Cont/Menu_HBox/Option_List/Option_Panel/Menu_Opts"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("3_05arv")
+toggle_mode = true
+button_group = ExtResource("5_3gg4c")
+text = "Save"
+flat = true
+clip_text = true
+
+[node name="Options" type="Button" parent="Menu_Cont/Menu_HBox/Option_List/Option_Panel/Menu_Opts"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("3_05arv")
+toggle_mode = true
+button_group = ExtResource("5_3gg4c")
+text = "Options"
+flat = true
+clip_text = true
+
+[node name="Cursor" type="Sprite2D" parent="."]
+texture = ExtResource("4_j80cs")
+
+[connection signal="finished" from="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel" to="." method="active_finished"]
+[connection signal="toggled" from="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel/HBox1/Amounts/Values_Grid/0Button" to="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel" method="val_but_toggled" binds= [0]]
+[connection signal="toggled" from="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel/HBox1/Amounts/Values_Grid/1Button" to="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel" method="val_but_toggled" binds= [1]]
+[connection signal="toggled" from="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel/HBox1/Amounts/Values_Grid/2Button" to="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel" method="val_but_toggled" binds= [2]]
+[connection signal="toggled" from="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel/HBox1/Amounts/Values_Grid/3Button" to="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel" method="val_but_toggled" binds= [3]]
+[connection signal="toggled" from="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel/HBox1/Amounts/Values_Grid/4Button" to="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel" method="val_but_toggled" binds= [4]]
+[connection signal="toggled" from="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel/HBox1/Amounts/Values_Grid/5Button" to="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel" method="val_but_toggled" binds= [5]]
+[connection signal="toggled" from="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel/HBox1/Amounts/Values_Grid/6Button" to="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel" method="val_but_toggled" binds= [6]]
+[connection signal="toggled" from="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel/HBox1/Amounts/Values_Grid/7Button" to="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel" method="val_but_toggled" binds= [7]]
+[connection signal="toggled" from="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel/HBox1/Amounts/Values_Grid/8Button" to="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel" method="val_but_toggled" binds= [8]]
+[connection signal="toggled" from="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel/HBox1/Amounts/Values_Grid/9Button" to="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel" method="val_but_toggled" binds= [9]]
+[connection signal="toggled" from="Menu_Cont/Menu_HBox/Option_List/Option_Panel/Menu_Opts/Inventory" to="." method="_on_inventory_toggled"]
+[connection signal="toggled" from="Menu_Cont/Menu_HBox/Option_List/Option_Panel/Menu_Opts/Cards" to="." method="_on_cards_toggled"]

@@ -6,14 +6,11 @@ extends CanvasLayer
 @onready var anims : AnimationPlayer = get_node("anims");
 @onready var cursor : Sprite2D = get_node("%cursor");
 
-
-
 func _ready() -> void:
 	DialogueManager.dialogue_layer = self;
 	dialogue_cont.visible = false;
 	options.visible = false;
 	pass
-
 
 func _process(_delta: float) -> void:
 	pass

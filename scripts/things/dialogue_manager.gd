@@ -9,6 +9,8 @@ var OPTION_BOT = preload("res://testArt/using/optionBoxBot.png");
 enum STATES {IDLE, DIALOGUE, DIALOGUEDONE, OPTIONS, SELECTED, FINISHED};
 var current_state : STATES = STATES.IDLE;
 
+var empty_call : Callable = func (): pass;
+
 var cur_player : CharacterBody2D;
 var dialogue_layer : CanvasLayer;
 
@@ -39,15 +41,16 @@ func _process(delta: float) -> void:
 	if current_state == STATES.DIALOGUE && dialogue_layer.dialogue_text.visible_characters >= max_chars:
 		current_state = STATES.DIALOGUEDONE;
 
-#returns either the option selected [0, ... x] or -1 if doDia fails or there were no options
+#returns either the option selected [0, ... x] or 0 if doDia fails or there were no options
+#Current oversights: If doDia is called while already running it is UB
+#Assumes the chain of dialog objects is setup correctly, otherwise theres a chance it could try calling OOB
 func doDialogue(dialogue : DialogueObject) -> int:
 	if dialogue == null || dialogue.is_empty():
 		endDialogue();
-		return -1;
+		return 0;
 	current_state = STATES.DIALOGUE;
 	
 	current_dialogue = dialogue;
-	cur_player.Player_UI.visible = false;
 	cur_player.transition_state(cur_player.STATES.DIALOGUE);
 	max_chars = current_dialogue.text.length();
 	chars = 0;
@@ -58,7 +61,6 @@ func doDialogue(dialogue : DialogueObject) -> int:
 	await self.dialogue_finished;
 	#endDialogue();
 	var selected = await doOptions();
-	print_debug(selected);
 	if (current_dialogue.flag <= -1):
 		endDialogue();
 		return selected;
@@ -81,7 +83,7 @@ func doDialogue(dialogue : DialogueObject) -> int:
 func doOptions() -> int:
 	if current_dialogue.options.is_empty():
 		current_state = STATES.FINISHED;
-		return -1;
+		return 0;
 	current_state = STATES.OPTIONS;
 	
 	var op_num = 0;
@@ -92,7 +94,6 @@ func doOptions() -> int:
 	dialogue_layer.options.visible = true;
 	option_num = 0;
 	var option_picked : int = await self.option_selected;
-	
 	for x in dialogue_layer.options.get_children():
 		if x is Button:
 			x.queue_free();
@@ -100,15 +101,16 @@ func doOptions() -> int:
 	dialogue_layer.options.visible = false;
 	return option_picked;
 	
+#resets to exit dialogue
 func endDialogue() -> void:
 	cur_player.transition_state(cur_player.STATES.IDLE);
 	dialogue_layer.dialogue_cont.visible = false;
 	dialogue_layer.options.visible = false;
-	cur_player.Player_UI.visible = true;
+	current_state = STATES.IDLE;
 	
-	
+#input, consumes while displaying
 func _unhandled_input(event: InputEvent) -> void:
-	if current_state != STATES.IDLE && event.is_action_released("attack"):
+	if current_state != STATES.IDLE && event.is_action_released("ui_accept"):
 		input_confirm(option_num);
 	if current_state == STATES.OPTIONS:
 		if event.is_action_pressed("move_up"):
@@ -118,7 +120,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			option_num = posmod(option_num +1, current_dialogue.options.size());
 			dialogue_layer.cursor.position.y = (230 - 26.8 * (current_dialogue.options.size() - 1)) + 26.8 * (option_num); #shut up i found numbers manually
 	
-			
+#Seperated this for clarity
 func input_confirm(data : int = 0):
 	if current_state == STATES.DIALOGUE:
 		chars = max_chars;
@@ -126,7 +128,8 @@ func input_confirm(data : int = 0):
 		dialogue_finished.emit();
 	elif  current_state == STATES.OPTIONS:
 		option_selected.emit(data);
-		
+
+#Draw and setup each option button
 func draw_button(x : String = "wrong", num : int = 0):
 		var option_button : Button = OPTION_BUTTON.instantiate();
 		if num == 0 && current_dialogue.options.size() == 1:
@@ -140,4 +143,4 @@ func draw_button(x : String = "wrong", num : int = 0):
 		
 		option_button.text = x;
 		dialogue_layer.options.add_child(option_button);
-		option_button.pressed.connect(input_confirm.bind(num));
+		#option_button.pressed.connect(input_confirm.bind(num)); for now uis arent clickable

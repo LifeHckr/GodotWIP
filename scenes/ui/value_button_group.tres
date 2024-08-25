@@ -1,0 +1,5 @@
+[gd_resource type="ButtonGroup" format=3 uid="uid://dnnq1nqdlw3s5"]
+
+[resource]
+resource_name = "Values Button Grp"
+allow_unpress = true

@@ -48,6 +48,7 @@ func _init_deck(owner_cards : Array[Card], max_card : int = 5) -> void:
 	for x in owner_cards:
 		if cards_remaining >= max_size:
 			break;
+		x._reset();
 		_add_back(x);
 	battle_cards = cards.duplicate(false); #note to self: idk how i feel about this
 	cards.shuffle();
@@ -153,6 +154,9 @@ func _get_combo_cards() -> Array[Card]:
 	return combo_cards.duplicate();
 
 #endregion
+
+func _set_max_size(siz : int) -> void:
+	max_size = siz;
 
 #Cursor should exist, uses card at cursor
 func _use_card(shouldExhaust : bool = false) -> void:

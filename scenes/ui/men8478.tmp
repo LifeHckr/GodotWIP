@@ -1,0 +1,242 @@
+[gd_scene load_steps=11 format=3 uid="uid://csgc5diuy00fj"]
+
+[ext_resource type="Script" path="res://scenes/ui/menu_layer.gd" id="1_18u61"]
+[ext_resource type="Texture2D" uid="uid://d1kwd0k0o6gnf" path="res://testArt/using/UIBox.png" id="1_hj81g"]
+[ext_resource type="Theme" uid="uid://bhtjvid87bvkk" path="res://scenes/ui/themeButtonPlain.tres" id="2_fohyx"]
+[ext_resource type="Texture2D" uid="uid://drpsqpsbd5x0s" path="res://testArt/using/cardEmpty.png" id="3_g5d2i"]
+[ext_resource type="Texture2D" uid="uid://dmi2xddbj3cpw" path="res://testArt/using/cursor.png" id="4_j80cs"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_6te8w"]
+resource_name = "Cards in Inv"
+allow_unpress = true
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_jb8d7"]
+resource_name = "Menu Options"
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_facqd"]
+resource_name = "Menu Options"
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_gf0ym"]
+resource_name = "Menu Options"
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_aaqko"]
+resource_name = "Menu Options"
+
+[node name="Menu_Layer" type="CanvasLayer"]
+script = ExtResource("1_18u61")
+
+[node name="Menu_Cont" type="MarginContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 10
+
+[node name="Menu_HBox" type="HBoxContainer" parent="Menu_Cont"]
+layout_mode = 2
+
+[node name="Big_Panel" type="NinePatchRect" parent="Menu_Cont/Menu_HBox"]
+self_modulate = Color(1, 1, 1, 0.682353)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 100.0
+texture = ExtResource("1_hj81g")
+patch_margin_left = 22
+patch_margin_top = 22
+patch_margin_right = 22
+patch_margin_bottom = 22
+
+[node name="Cards_Panel" type="MarginContainer" parent="Menu_Cont/Menu_HBox/Big_Panel"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="VBox" type="VBoxContainer" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel"]
+layout_mode = 2
+
+[node name="Top_Panel" type="NinePatchRect" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox"]
+self_modulate = Color(1, 1, 1, 0.682353)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource("1_hj81g")
+patch_margin_left = 22
+patch_margin_top = 22
+patch_margin_right = 22
+patch_margin_bottom = 22
+
+[node name="HBox2" type="HBoxContainer" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Top_Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+
+[node name="REPLACE_WITH_CARDS" type="MarginContainer" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Top_Panel/HBox2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Description" type="MarginContainer" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Top_Panel/HBox2"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+
+[node name="Desc_Box" type="RichTextLabel" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Top_Panel/HBox2/Description"]
+z_index = 1
+layout_direction = 2
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 16
+text = "Hello World"
+scroll_active = false
+shortcut_keys_enabled = false
+visible_characters_behavior = 1
+
+[node name="Big_Panel" type="NinePatchRect" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox"]
+self_modulate = Color(1, 1, 1, 0.682353)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource("1_hj81g")
+patch_margin_left = 22
+patch_margin_top = 22
+patch_margin_right = 22
+patch_margin_bottom = 22
+
+[node name="HBox1" type="HBoxContainer" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+
+[node name="Cards" type="MarginContainer" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel/HBox1"]
+layout_direction = 1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel/HBox1/Cards"]
+layout_mode = 2
+follow_focus = true
+
+[node name="Cards_Grid" type="GridContainer" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel/HBox1/Cards/ScrollContainer"]
+layout_direction = 2
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 1
+columns = 8
+
+[node name="Card_In_Decl" type="Button" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel/HBox1/Cards/ScrollContainer/Cards_Grid"]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+theme = ExtResource("2_fohyx")
+toggle_mode = true
+button_group = SubResource("ButtonGroup_6te8w")
+icon = ExtResource("3_g5d2i")
+
+[node name="Amounts" type="MarginContainer" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel/HBox1"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+
+[node name="Values_Grid" type="GridContainer" parent="Menu_Cont/Menu_HBox/Big_Panel/Cards_Panel/VBox/Big_Panel/HBox1/Amounts"]
+layout_mode = 2
+columns = 3
+
+[node name="Option_List" type="NinePatchRect" parent="Menu_Cont/Menu_HBox"]
+self_modulate = Color(1, 1, 1, 0.682353)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 25.0
+texture = ExtResource("1_hj81g")
+patch_margin_left = 22
+patch_margin_top = 22
+patch_margin_right = 22
+patch_margin_bottom = 22
+
+[node name="Option_Panel" type="MarginContainer" parent="Menu_Cont/Menu_HBox/Option_List"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="Options_VBox" type="VBoxContainer" parent="Menu_Cont/Menu_HBox/Option_List/Option_Panel"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Inventory" type="Button" parent="Menu_Cont/Menu_HBox/Option_List/Option_Panel/Options_VBox"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("2_fohyx")
+toggle_mode = true
+button_group = SubResource("ButtonGroup_jb8d7")
+text = "Inventory"
+flat = true
+clip_text = true
+
+[node name="Cards" type="Button" parent="Menu_Cont/Menu_HBox/Option_List/Option_Panel/Options_VBox"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("2_fohyx")
+toggle_mode = true
+button_group = SubResource("ButtonGroup_facqd")
+text = "Cards"
+flat = true
+clip_text = true
+
+[node name="Save" type="Button" parent="Menu_Cont/Menu_HBox/Option_List/Option_Panel/Options_VBox"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("2_fohyx")
+toggle_mode = true
+button_group = SubResource("ButtonGroup_gf0ym")
+text = "Save"
+flat = true
+clip_text = true
+
+[node name="Options" type="Button" parent="Menu_Cont/Menu_HBox/Option_List/Option_Panel/Options_VBox"]
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("2_fohyx")
+toggle_mode = true
+button_group = SubResource("ButtonGroup_aaqko")
+text = "Options"
+flat = true
+clip_text = true
+
+[node name="Cursor" type="Sprite2D" parent="."]
+texture = ExtResource("4_j80cs")
+
+[connection signal="toggled" from="Menu_Cont/Menu_HBox/Option_List/Option_Panel/Options_VBox/Cards" to="." method="_on_cards_toggled"]

@@ -44,7 +44,9 @@ var coyoteFrames : int = 5;
 var doing_combo : bool = false;
 var comboing : Array[Card];
 #COMBAT================================================================================================
-var cur_deck: Array[Card] = [MagicCard.new(1), MagicCard.new(1), MagicCard.new(1), MagicCard.new(1), MagicCard.new(2), PlayerAttackCard.new(1), PlayerAttackCard.new(1), PlayerAttackCard.new(1), PlayerAttackCard.new(1), PlayerAttackCard.new(1), PlayerAttackCard.new(2)];
+var max_deck_size : int = 12;
+var cur_deck: Array[Card] = [MagicCard.new(1), MagicCard.new(2), PlayerAttackCard.new(1), PlayerAttackCard.new(2)];
+var inventory :Inventory = Inventory.new();
 var owned_deck : Deck;
 var current_card : Card = null;
 var attack : int = 1;
@@ -77,13 +79,16 @@ func _ready() -> void:
 	owned_deck = preload("res://scenes/deck.tscn").instantiate();
 	add_child(owned_deck);
 	owned_deck.draw_to = Player_UI;
-	owned_deck._init_deck(cur_deck, 12);
+	owned_deck._init_deck(cur_deck, max_deck_size);
 	
 	hitbox.body_entered.connect(_on_hitbox_body_entered.bind());
 	
 	Player_UI.combo_controller.visible = combo_unlocked;
 	
 	DialogueManager.cur_player = self;
+	
+	inventory._add_card(1, 1, 5);
+	inventory._add_card(2, 0, 0);
 
 func _process(_delta) -> void:
 	

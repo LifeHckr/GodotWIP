@@ -1,6 +1,6 @@
 class_name ReloadCard extends Card
 
-func _init(v : int = 0):
+func _init(v : int):
 	super(v);
 	sprite = preload("res://testArt/using/cardReload.png");
 	can_combo = false;

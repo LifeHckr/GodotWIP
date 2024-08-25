@@ -1,0 +1,6 @@
+[gd_resource type="ButtonGroup" format=3 uid="uid://cl4im3a1jls1u"]
+
+[resource]
+resource_local_to_scene = false
+resource_name = "Menu Options"
+allow_unpress = true
